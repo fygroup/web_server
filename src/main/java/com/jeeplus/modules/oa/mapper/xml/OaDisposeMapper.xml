@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.oa.mapper.OaDisposeMapper">
+
+	<sql id="oaDisposeColumns">
+		a.id AS "id",
+		a.id AS "ids",
+		a.user_id AS "user.id",
+		a.declare_id AS "declareId",
+		u3.name AS "name",
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		a.problemstate AS "problemstate",
+		a.backresults AS "backresults",
+		a.complete AS "complete",
+		a.remark AS "remark",
+		a.problemtype AS "problemtype",
+		a.plan AS "plan",
+		a.cause AS "cause",
+		u4.description AS "description",
+		u4.declaretype  As "declaretype",
+		a.declare_id AS "oaIssueReturn.id",
+		e.id AS "oaIssueReturn.exception.id",
+		e.indicator_name AS "oaIssueReturn.exception.indicatorName",
+		e.exception_class AS "oaIssueReturn.exception.exceptionClass",
+		e.Current_status AS "oaIssueReturn.exception.CurrentStatus"
+	</sql>
+
+	<sql id="oaDisposeJoins">
+		LEFT JOIN sys_user u3 ON u3.id = a.user_id
+		LEFT JOIN oa_issue_return u4 ON u4.id = a.declare_id
+		LEFT  JOIN resource_exception e ON e.id = u4.exception_id
+
+	</sql>
+
+	<select id="get" resultType="OaDispose">
+
+		SELECT
+		<include refid="oaDisposeColumns"/>
+		FROM oa_dispose a
+		<include refid="oaDisposeJoins"/>
+
+		WHERE  a.id = #{id}
+
+	</select>
+
+	<select id="findList" resultType="OaDispose">
+		SELECT
+		<include refid="oaDisposeColumns"/>
+		FROM oa_dispose a
+		<include refid="oaDisposeJoins"/>
+		<where>
+			<if test="currentUser.id != null and currentUser.id != ''">
+				a.user_id = #{currentUser.id}
+			</if>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="OaDispose">
+		SELECT
+		<include refid="oaDisposeColumns"/>
+		FROM oa_dispose a
+		<include refid="oaDisposeJoins"/>
+		<where>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO oa_dispose(
+		id,
+		declare_id,
+		user_id,
+		start_time,
+		end_time,
+		problemstate,
+		backresults,
+		complete,
+		remark,
+		problemtype,
+		plan,
+		cause
+		) VALUES (
+		#{id},
+		#{declareId},
+		#{user_id},
+		#{startTime},
+		#{endTime},
+		#{problemstate},
+		#{backresults},
+		#{complete},
+		#{remark},
+		#{problemtype},
+		#{plan},
+		#{cause}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE oa_dispose SET
+		start_time = #{startTime},
+		end_time = #{endTime},
+		problemstate = #{problemstate},
+		complete = #{complete},
+		remark = #{remark},
+		problemtype = #{problemtype},
+		plan = #{plan},
+		cause = #{cause}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		DELETE FROM oa_dispose
+		WHERE id = #{id}
+	</update>
+
+</mapper>

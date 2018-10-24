@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.attack.mapper.AttackMapper">
+    
+	<sql id="attackColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.resource_id AS "resourceId",
+		a.sort AS "sort",
+		a.name AS "name",
+		a.value AS "value"
+	</sql>
+	
+	<sql id="attackJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="Attack" >
+		SELECT 
+			<include refid="attackColumns"/>
+		FROM attack a
+		<include refid="attackJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getWithResourceId" resultType="Attack" >
+		SELECT
+			<include refid="attackColumns"/>
+		FROM attack a
+		<include refid="attackJoins"/>
+		WHERE a.resource_id = #{resourceId}
+	</select>
+	
+	<select id="findList" resultType="Attack" >
+		SELECT 
+			<include refid="attackColumns"/>
+		FROM attack a
+		<include refid="attackJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="resourceId != null and resourceId != ''">
+				AND a.resource_id = #{resourceId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.sort ASC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="Attack" >
+		SELECT 
+			<include refid="attackColumns"/>
+		FROM attack a
+		<include refid="attackJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.sort ASC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="getTopAttack" resultType="Attack" >
+		SELECT
+		a.create_date AS "createDate",
+		a.resource_id AS "resourceId",
+		a.value AS "value",
+		a.id AS "id"
+		FROM attack a
+		WHERE a.resource_id = #{resourceId}  ORDER BY a.create_date DESC  limit 1
+	</select>
+
+</mapper>

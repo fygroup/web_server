@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.topoline.mapper.TopoLineMapper">
+    
+	<sql id="topoLineColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.name AS "name",
+		a.path AS "path",
+		a.type AS "type",
+		a.src_symbol AS "srcSymbol",
+		a.dst_symbol AS "dstSymbol",
+		a.view_id AS "view.id",
+		a.object_id AS "objectId",
+		a.object_class AS "objectClass",
+		a.instance_id AS "instanceId",
+		a.options AS "options",
+		a.url AS "url",
+		a.alarm AS "alarm",
+		a.style AS "style",
+		line_type AS "lineType"
+	</sql>
+	
+	<sql id="topoLineJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="TopoLine" >
+		SELECT 
+			<include refid="topoLineColumns"/>
+		FROM topo_line a
+		<include refid="topoLineJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TopoLine" >
+		SELECT 
+			<include refid="topoLineColumns"/>
+		FROM topo_line a
+		<include refid="topoLineJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="view != null and view.id != null and view.id != ''">
+				and a.view_id = #{view.id}
+			</if>
+			${dataScope}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<select id="lineIdsByClass" resultType="TopoLine" >
+		SELECT a.id AS "id",a.object_id AS "objectId"  FROM topo_line a WHERE  a.view_id = #{viewId} AND a.object_class='2'
+	</select>
+
+	<select id="checkLinkExist" resultType="Integer" >
+		select count(*) from topo_line where  	view_id = #{viewId} AND object_id=#{objectId} AND  AND a.object_class='2'
+	</select>
+
+	
+	<select id="findAllList" resultType="TopoLine" >
+		SELECT 
+			<include refid="topoLineColumns"/>
+		FROM topo_line a
+		<include refid="topoLineJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT IGNORE INTO topo_line(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			name,
+			path,
+			type,
+			src_symbol,
+			dst_symbol,
+			view_id,
+			object_id,
+			object_class,
+			instance_id,
+			options,
+			url,
+			alarm,
+			style,
+			line_type
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{name},
+			#{path},
+			#{type},
+			#{srcSymbol},
+			#{dstSymbol},
+			#{view.id},
+			#{objectId},
+			#{objectClass},
+			#{instanceId},
+			#{options},
+			#{url},
+			#{alarm},
+			#{style},
+			#{lineType}
+		)
+	</insert>
+
+	<insert id="saveList">
+		INSERT INTO topo_line(
+		id,
+		create_by,
+		create_date,
+		update_by,
+		update_date,
+		remarks,
+		del_flag,
+		name,
+		path,
+		type,
+		src_symbol,
+		dst_symbol,
+		view_id,
+		object_id,
+		object_class,
+		instance_id,
+		options,
+		url,
+		alarm,
+		style,
+		line_type
+		)
+		<foreach collection="list" item="tl" separator=" union all ">
+			SELECT 	#{tl.id},
+			#{tl.createBy.id},
+			#{tl.createDate},
+			#{tl.updateBy.id},
+			#{tl.updateDate},
+			#{tl.remarks},
+			#{tl.delFlag},
+			#{tl.name},
+			#{tl.path},
+			#{tl.type},
+			#{tl.srcSymbol},
+			#{tl.dstSymbol},
+			#{tl.view.id},
+			#{tl.objectId},
+			#{tl.objectClass},
+			#{tl.instanceId},
+			#{tl.options},
+			#{tl.url},
+			#{tl.alarm},
+			#{tl.style},
+			#{tl.lineType} FROM dual
+		</foreach>
+
+
+	</insert>
+
+	
+	<update id="update">
+		UPDATE topo_line SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			name = #{name},
+			path = #{path},
+			type = #{type},
+			src_symbol = #{srcSymbol},
+			dst_symbol = #{dstSymbol},
+			view_id = #{view.id},
+			object_id = #{objectId},
+			object_class = #{objectClass},
+			instance_id = #{instanceId},
+			options = #{options},
+			url = #{url},
+			alarm = #{alarm},
+			style = #{style},
+			line_type = #{lineType}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM topo_line
+		WHERE id = #{id}
+	</update>
+
+
+
+
+	<update id="delByViewId">
+		DELETE FROM topo_line
+		WHERE view_id = #{viewId} AND line_type = '2'
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE topo_line SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="TopoLine" statementType="STATEMENT">
+		select * FROM topo_line  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

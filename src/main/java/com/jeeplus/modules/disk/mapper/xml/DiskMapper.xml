@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.disk.mapper.DiskMapper">
+    
+	<sql id="diskColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.name AS "name",
+		a.total AS "total",
+		a.used AS "used",
+		a.free AS "free",
+		a.resource_id AS "resourceId",
+		a.used_rate AS "usedRate",
+		a.sort AS "sort"
+	</sql>
+	
+	<sql id="diskJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="Disk" >
+		SELECT 
+			<include refid="diskColumns"/>
+		FROM disk a
+		<include refid="diskJoins"/>
+		WHERE a.resource_id = #{id}
+	</select>
+
+
+	<select id="getTopUsed" resultType="Disk" >
+		SELECT
+		<include refid="diskColumns"/>
+		FROM disk a
+		WHERE a.resource_id = #{resourceId} AND  (a.create_date BETWEEN #{beginDate} AND #{endDate})  ORDER BY a.used_rate DESC limit 1
+	</select>
+
+
+	
+	<select id="findList" resultType="Disk" >
+		SELECT 
+			<include refid="diskColumns"/>
+		FROM disk a
+		<include refid="diskJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="resourceId != null and resourceId != ''">
+				AND a.resource_id = #{resourceId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.sort ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Disk" >
+		SELECT 
+			<include refid="diskColumns"/>
+		FROM disk a
+		<include refid="diskJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="resourceId != null and resourceId != ''">
+				AND a.resource_id = #{resourceId}
+			</if>
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.sort ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO disk(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			name,
+			total,
+			used,
+			free,
+			used_rate,
+		    resource_id,
+		    sort
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{name},
+			#{total},
+			#{used},
+			#{free},
+			#{usedRate},
+			#{resourceId},
+			#{sort}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE disk SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			name = #{name},
+			total = #{total},
+			used = #{used},
+			free = #{free},
+			resource_id = #{resourceId},
+			used_rate = #{usedRate},
+			sort = #{sort}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM disk
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE disk SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="Disk" statementType="STATEMENT">
+		select * FROM disk  where ${propertyName} = '${value}'
+	</select>
+
+
+	<!--根据资源删除-->
+	<update id="delByResourceId">
+		DELETE FROM disk WHERE resource_id = #{id}
+	</update>
+
+	<insert id="saveList">
+		INSERT INTO disk(
+		id,
+		create_by,
+		create_date,
+		update_by,
+		update_date,
+		remarks,
+		del_flag,
+		name,
+		total,
+		used,
+		free,
+		used_rate,
+		resource_id,
+		sort
+		)
+		<foreach collection="list" item="disk" separator=" union all ">
+			SELECT 	#{disk.id},
+			#{disk.createBy.id},
+			#{disk.createDate},
+			#{disk.updateBy.id},
+			#{disk.updateDate},
+			#{disk.remarks},
+			#{disk.delFlag},
+			#{disk.name},
+			#{disk.total},
+			#{disk.used},
+			#{disk.free},
+			#{disk.usedRate},
+			#{disk.resourceId},
+			#{disk.sort} FROM dual
+		</foreach>
+
+
+	</insert>
+
+
+
+</mapper>

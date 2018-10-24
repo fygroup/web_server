@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.oa.mapper.OaIssueReturnMapper">
+    
+	<sql id="oaIssueReturnColumns">
+		a.id AS "id",
+        a.user_id AS "mailList.id",
+        a.conductorid AS "conductorid",
+		u.name AS "name",
+		u2.name AS "opsname",
+		a.description AS "description",
+		a.place AS "place",
+		a.detailplace AS "detailplace",
+		a.problemstate AS "problemstate",
+		a.ediid AS "ediid",
+		a.date AS "date",
+		a.applicant AS "applicant",
+		a.problem_class AS "problemClass",
+		a.declaretype AS "declaretype",
+	    d.complete AS "finishTime",
+		a.exception_id AS "exception.id",
+		e.indicator_name AS "exception.indicatorName",
+		case when e.exception_class is null then a.problem_class else e.exception_class end  as "exception.exceptionClass" ,
+		e.Current_status AS "exception.CurrentStatus",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="oaIssueReturnJoins">
+			LEFT JOIN mo_maillist u on u.id=a.user_id
+			LEFT JOIN resource_exception e ON e.id = a.exception_id
+			LEFT JOIN sys_user u2 ON u2.id = a.conductorid
+			LEFT JOIN oa_dispose d ON d.declare_id = a.id
+	</sql>
+    
+	<select id="get" resultType="OaIssueReturn">
+		SELECT 
+			<include refid="oaIssueReturnColumns"/>
+		FROM oa_issue_return a
+		<include refid="oaIssueReturnJoins"/>
+		WHERE a.id = #{id}
+
+	</select>
+	
+	<select id="findList" resultType="OaIssueReturn">
+		SELECT 
+			<include refid="oaIssueReturnColumns"/>
+		FROM oa_issue_return a
+		<include refid="oaIssueReturnJoins"/>
+		where a.del_flag = #{DEL_FLAG_NORMAL}
+		order by a.problemstate,e.exception_class desc,a.problem_class desc
+		<where>
+
+			<if test="name != null and name != ''">
+				AND u.name LIKE
+				<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="dateStart != null">
+				AND a.date &gt;= #{dateStart}
+			</if>
+			<if test="dateEnd != null">
+				AND a.date &lt;= #{dateEnd}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OaIssueReturn">
+		SELECT 
+			<include refid="oaIssueReturnColumns"/>
+		FROM oa_issue_return a
+		<include refid="oaIssueReturnJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO oa_issue_return(
+			id,
+			user_id,
+			conductorid,
+			description,
+			place,
+			detailplace,
+			problemstate,
+			ediid,
+			date,
+			declaretype,
+			exception_id,
+			applicant,
+			problem_class
+		) VALUES (
+			#{id},
+			#{mailList.id},
+			#{conductorid},
+			#{description},
+			#{place},
+			#{detailplace},
+			#{problemstate},
+			#{ediid},
+			#{date},
+			#{declaretype},
+			#{exception.id},
+			#{applicant},
+			#{problemClass}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE oa_issue_return SET
+			description = #{description},
+			user_id=#{mailList.id},
+			conductorid=#{conductorid},
+			place = #{place},
+			detailplace = #{detailplace},
+			problemstate = #{problemstate},
+			ediid = #{ediid},
+			date = #{date},
+			declaretype = #{declaretype},
+			exception_id = #{exception.id},
+			problem_class = #{problemClass}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE oa_issue_return SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<select id="send" resultType="OaIssueReturn">
+		select id from sys_user sy where sy.id not in ( SELECT od.user_id from oa_dispose od where od.problemstate!=3)
+        and sy.id  in (select js.user_id  from sys_user_role js where js.role_id='d0f7e30e3cfd48b1a2685fc18a0123ea')
+        ORDER BY RAND() LIMIT 1
+	</select>
+</mapper>

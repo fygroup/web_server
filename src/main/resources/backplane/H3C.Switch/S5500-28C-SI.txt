@@ -1,0 +1,195 @@
+<div class="fixed-table-body" >
+				<div class="network-adapter">
+					<div class="network-adapter-container">
+						<div class="network-adapter-mid" style="min-width: 410px;max-width:410px;">
+							<div class="network-adapter-mid-contact">
+								<ul>
+									<li>
+										<div id="interface1" class="network-adapter-mid-li-top">
+											<p>1</p>
+											<div id="GigabitEthernet1_0_1">
+												<img src="ctxStatic/common/images/interface_up.png"  width="100%">
+											</div>
+										</div>
+										<div id="interface2" class="network-adapter-mid-li-top">
+											<div id="GigabitEthernet1_0_2">
+												<img src="ctxStatic/common/images/interface_down.png"   width="100%">
+											</div>
+											<p>2</p>
+										</div>
+									</li>
+									<li>
+										<div id="interface3" class="network-adapter-mid-li-top">
+											<p>3</p>
+											<div id="GigabitEthernet1_0_3">
+												<img src="ctxStatic/common/images/interface_up.png"   width="100%">
+											</div>
+										</div>
+										<div id="interface4" class="network-adapter-mid-li-top">
+											<div  id="GigabitEthernet1_0_4" >
+												<img src="ctxStatic/common/images/interface_down.png" width="100%">
+											</div>
+											<p>4</p>
+										</div>
+									</li>
+									<li>
+										<div id="interface5" class="network-adapter-mid-li-top">
+											<p>5</p>
+											<div id="GigabitEthernet1_0_5" >
+												<img src="ctxStatic/common/images/interface_up.png"   width="100%">
+											</div>
+										</div>
+										<div id="interface6" class="network-adapter-mid-li-top">
+											<div id="GigabitEthernet1_0_6">
+												<img src="ctxStatic/common/images/interface_down.png"  width="100%">
+											</div>
+											<p>6</p>
+										</div>
+									</li>
+									<li>
+										<div id="interface7" class="network-adapter-mid-li-top">
+											<p>7</p>
+											<div id="GigabitEthernet1_0_7">
+												<img src="ctxStatic/common/images/interface_up.png"  width="100%">
+											</div>
+										</div>
+										<div id="interface8" class="network-adapter-mid-li-top">
+											<div id="GigabitEthernet1_0_8">
+												<img src="ctxStatic/common/images/interface_down.png"  width="100%">
+											</div>
+											<p>8</p>
+										</div>
+									</li>
+									<li>
+										<div id="interface9" class="network-adapter-mid-li-top">
+											<p>9</p>
+											<div id="GigabitEthernet1_0_9">
+												<img src="ctxStatic/common/images/interface_up.png"  width="100%">
+											</div>
+										</div>
+										<div id="interface10" class="network-adapter-mid-li-top">
+											<div id="GigabitEthernet1_0_10">
+												<img src="ctxStatic/common/images/interface_down.png"  width="100%">
+											</div>
+											<p>10</p>
+										</div>
+									</li>
+									<li>
+										<div id="interface11" class="network-adapter-mid-li-top">
+											<p>11</p>
+											<div id="GigabitEthernet1_0_11">
+												<img src="ctxStatic/common/images/interface_up.png"   width="100%">
+											</div>
+										</div>
+										<div id="interface12" class="network-adapter-mid-li-top">
+											<div id="GigabitEthernet1_0_12">
+												<img src="ctxStatic/common/images/interface_down.png"   width="100%">
+											</div>
+											<p>12</p>
+										</div>
+									</li>
+									<li>
+										<div id="interface13" class="network-adapter-mid-li-top">
+											<p>13</p>
+											<div id="GigabitEthernet1_0_13">
+												<img src="ctxStatic/common/images/interface_up.png"   width="100%">
+											</div>
+										</div>
+										<div id="interface14" class="network-adapter-mid-li-top">
+											<div id="GigabitEthernet1_0_14" >
+												<img src="ctxStatic/common/images/interface_down.png"  width="100%">
+											</div>
+											<p>14</p>
+										</div>
+									</li>
+									<li>
+										<div id="interface15" class="network-adapter-mid-li-top">
+											<p>15</p>
+											<div id="GigabitEthernet1_0_15" >
+												<img src="ctxStatic/common/images/interface_up.png"  width="100%">
+											</div>
+										</div>
+										<div id="interface16" class="network-adapter-mid-li-top">
+											<div id="GigabitEthernet1_0_16">
+												<img src="ctxStatic/common/images/interface_down.png"   width="100%">
+											</div>
+											<p>16</p>
+										</div>
+									</li>
+								</ul>
+								<ul>
+									<li>
+										<div id="interface17" class="network-adapter-mid-li-top">
+											<p>17</p>
+											<div id="GigabitEthernet1_0_17">
+												<img src="ctxStatic/common/images/interface_up.png" width="100%">
+											</div>
+										</div>
+										<div id="interface18" class="network-adapter-mid-li-top">
+											<div id="GigabitEthernet1_0_18">
+												<img src="ctxStatic/common/images/interface_down.png" width="100%">
+											</div>
+											<p>18</p>
+										</div>
+									</li>
+									<li>
+										<div id="interface19" class="network-adapter-mid-li-top">
+											<p>19</p>
+											<div id="GigabitEthernet1_0_19">
+												<img src="ctxStatic/common/images/interface_up.png" width="100%">
+											</div>
+										</div>
+										<div id="interface20" class="network-adapter-mid-li-top">
+											<div id="GigabitEthernet1_0_20">
+												<img src="ctxStatic/common/images/interface_down.png" width="100%">
+											</div>
+											<p>20</p>
+										</div>
+									</li>
+									<li>
+										<div id="interface21" class="network-adapter-mid-li-top">
+											<p>21</p>
+											<div  id="GigabitEthernet1_0_21">
+												<img src="ctxStatic/common/images/interface_up.png" width="100%">
+											</div>
+										</div>
+										<div id="interface22" class="network-adapter-mid-li-top">
+											<div id="GigabitEthernet1_0_22">
+												<img src="ctxStatic/common/images/interface_down.png" width="100%">
+											</div>
+											<p>22</p>
+										</div>
+									</li>
+									<li>
+										<div id="interface23" class="network-adapter-mid-li-top">
+											<p>23</p>
+											<div  id="GigabitEthernet1_0_23">
+												<img src="ctxStatic/common/images/interface_up.png" width="100%">
+											</div>
+										</div>
+										<div id="interface24" class="network-adapter-mid-li-top">
+											<div id="GigabitEthernet1_0_24">
+												<img src="ctxStatic/common/images/interface_down.png" width="100%">
+											</div>
+											<p>24</p>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="network-adapter-right" style="">
+							<div class="network-adapter-right-title" style="margin-left:420px;width:240px;">H3C S5500-28C-SL</div>
+							<div class="network-adapter-right-contact" style="margin-top:50px;margin-left:50px;">
+								<div class="interface-cont" style="display: flex;justify-content: space-around;min-width: 220px;">
+									<div class="interface-first" id="GigabitEthernet1_0_25"><img src="ctxStatic/common/images/interface_one.png" width="50"></div>
+									<div class="interface-first" id="GigabitEthernet1_0_26"><img src="ctxStatic/common/images/interface_one.png" width="50"></div>
+									<div class="interface-first" id="GigabitEthernet1_0_27"><img src="ctxStatic/common/images/interface_one.png" width="50"></div>
+									<div class="interface-first" id="GigabitEthernet1_0_28"><img src="ctxStatic/common/images/interface_one.png" width="50"></div>
+									<div class="interface-first" id="GigabitEthernet0_6"><img src="ctxStatic/common/images/interface_down.png" width="40"></div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>

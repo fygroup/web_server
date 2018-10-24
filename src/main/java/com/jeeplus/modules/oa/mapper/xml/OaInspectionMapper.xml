@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.oa.mapper.OaInspectionMapper">
+    
+	<sql id="oaInspectionColumns">
+		a.id AS "id",
+		a.user_id AS "user.id",
+		a.date AS "date",
+		a.isflag AS "isflag",
+		a.pagename AS "pagename",
+		a.pagevalue AS  "pagevalue",
+		a.contents AS "contents",
+		a.remark AS "remark",
+		u.name AS "name",
+		a.del_flag AS "delFlag"
+	</sql>
+
+	<sql id="oaInspectionJoins">
+		left JOIN sys_user u ON u.id=a.user_id
+
+	</sql>
+
+	<resultMap type="OaInspection" id="TestopsResult" autoMapping="true">
+		<result column="contents" property="contents"   typeHandler="com.jeeplus.core.mapper.ConvertBlobTypeHandler"/>
+	</resultMap>
+    
+	<select id="get" resultMap="TestopsResult" >
+		SELECT 
+			<include refid="oaInspectionColumns"/>
+		FROM oa_inspection a
+		<include refid="oaInspectionJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultMap="TestopsResult" >
+		SELECT 
+			<include refid="oaInspectionColumns"/>
+		FROM oa_inspection a
+		<include refid="oaInspectionJoins"/>
+		<where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="name != null and name != ''">
+				AND u.name LIKE
+				<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="dateStart != null">
+				AND a.date &gt;= #{dateStart}
+			</if>
+			<if test="dateEnd != null">
+				AND a.date &lt;= #{dateEnd}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="OaInspection">
+		SELECT 
+			<include refid="oaInspectionColumns"/>
+		FROM oa_inspection a
+		<include refid="oaInspectionJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO oa_inspection(
+			id,
+			user_id,
+			date,
+			isflag,
+			pagename,
+			pagevalue,
+			contents,
+			remark
+		) VALUES (
+			#{id},
+			#{user.id},
+			#{date},
+			#{isflag},
+			#{pagename},
+			#{pagevalue},
+			#{contents},
+			#{remark}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE oa_inspection SET 	
+			user_id = #{user.id},
+			date = #{date},
+			isflag = #{isflag},
+			pagename=#{pagename},
+			pagevalue=#{pagevalue},
+			contents = #{contents},
+			remark = #{remark}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+-- 		DELETE FROM oa_inspection
+		UPDATE oa_inspection SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

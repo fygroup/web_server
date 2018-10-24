@@ -1,0 +1,65 @@
+<div class="network-adapter">
+				<div class="router-container">
+					<h3>Cisco </h3>
+					<ul>
+						<li>
+							<div id="router-interface1" class="network-adapter-mid-li-top">
+								<div>
+									<img src="${ctxStatic}/common/images/interface_up.png" width="100%">
+								</div>
+							</div>
+						</li>
+						<li>
+							<div id="router-interface2" class="network-adapter-mid-li-top">
+								<div>
+									<img src="${ctxStatic}/common/images/interface_up.png" width="100%">
+								</div>
+							</div>
+						</li>
+						<li>
+							<div id="router-interface3" class="network-adapter-mid-li-top">
+								<div>
+									<img src="${ctxStatic}/common/images/interface_up.png" width="100%">
+								</div>
+							</div>
+						</li>
+						<li>
+							<div id="router-interface4" class="network-adapter-mid-li-top">
+								<div>
+									<img src="${ctxStatic}/common/images/interface_up.png" width="100%">
+								</div>
+							</div>
+						</li>
+						<li>
+							<div id="router-interface5" class="network-adapter-mid-li-top">
+								<div>
+									<img src="${ctxStatic}/common/images/interface_up.png" width="100%">
+								</div>
+							</div>
+						</li>
+						<li>
+							<div id="router-interface6" class="network-adapter-mid-li-top">
+								<div>
+									<img src="${ctxStatic}/common/images/interface_up.png" width="100%">
+								</div>
+							</div>
+						</li>
+						<li>
+							<div id="router-interface73" class="network-adapter-mid-li-top">
+								<div>
+									<img src="${ctxStatic}/common/images/interface_up.png" width="100%">
+								</div>
+							</div>
+						</li>
+					</ul>
+					<ul>
+						<li>
+							<div id="router-interface8" class="network-adapter-mid-li-top">
+								<div>
+									<img src="${ctxStatic}/common/images/interface_up.png" width="100%">
+								</div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>

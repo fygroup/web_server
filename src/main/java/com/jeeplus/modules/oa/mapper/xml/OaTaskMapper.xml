@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.oa.mapper.OaTaskMapper">
+
+	<sql id="taskColumns">
+		a.id AS "id",
+		u.name AS "name",
+		a.task_name AS "taskName",
+		a.user_id AS "user.id",
+		a.user_id AS "userId",
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		a.description AS "description",
+		a.is_flag AS "isFlag",
+		a.remark AS "remark",
+		a.create_user AS "createUser",
+		a.order_time AS "orderTime"
+	</sql>
+
+	<sql id="taskJoins">
+		LEFT JOIN sys_user u ON u.id = a.create_user
+	</sql>
+
+	<select id="get" resultType="OaTask">
+		SELECT
+		<include refid="taskColumns"/>
+		FROM oa_task a
+		<include refid="taskJoins"/>
+		WHERE a.del_flag!=1 and a.id = #{id}
+		ORDER BY orderTime desc
+	</select>
+
+
+	<select id="getoaTask" resultType="OaTask">
+		SELECT
+		<include refid="taskColumns"/>
+		FROM oa_task a
+		<include refid="taskJoins"/>
+		WHERE a.del_flag!=1
+		ORDER BY orderTime desc
+	</select>
+
+	<select id="findList" resultType="OaTask">
+		SELECT
+		<include refid="taskColumns"/>
+		FROM oa_task a
+		<include refid="taskJoins"/>
+		<where>
+			a.del_flag != 1
+			<if test="taskName != null and taskName != ''">
+				AND a.task_name LIKE
+				<if test="dbName == 'mysql'">concat('%',#{taskName},'%')</if>
+			</if>
+			<if test="startTime != null">
+				AND a.order_time &gt;= #{startTime}
+			</if>
+			<if test="endTime != null">
+				AND a.order_time &lt;= #{endTime}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+		ORDER BY orderTime desc
+	</select>
+
+	<select id="findAllList" resultType="OaTask">
+		SELECT
+		<include refid="taskColumns"/>
+		FROM oa_task a
+		<include refid="taskJoins"/>
+		<where>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO oa_task(
+		id,
+		task_name,
+		user_id,
+		start_time,
+		end_time,
+		description,
+		is_flag,
+		del_flag,
+		remark,
+		create_user,
+		order_time
+		) VALUES (
+		#{id},
+		#{taskName},
+		#{userId},
+		#{startTime},
+		#{endTime},
+		#{description},
+		#{isFlag},
+		#{delFlag},
+		#{remark},
+		#{createUser},
+		#{orderTime}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE oa_task SET
+		task_name=#{taskName},
+		start_time = #{startTime},
+		end_time = #{endTime},
+		description = #{description},
+		is_flag = #{isFlag},
+		remark = #{remark}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE oa_task SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+
+	<!--设置处理状态-->
+	<update id="setIsFlag">
+		UPDATE oa_task SET
+		is_flag = '1'
+		WHERE id = #{taskId}
+	</update>
+
+	<!--设置完成状态-->
+	<update id="setIsFlagFinish">
+		UPDATE oa_task SET
+		is_flag = '2'
+		WHERE id = #{taskId}
+	</update>
+
+</mapper>

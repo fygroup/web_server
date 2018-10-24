@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.resourceindicatorlist.mapper.ResourceIndicatorlistMapper">
+    
+	<sql id="resourceIndicatorlistColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.resource_id AS "resourceId",
+		a.indicator_id AS "indicatorId",
+		il.unit AS "indicator.unit",
+		il.name AS "indicator.name",
+		il.resource_type_id AS "indicator.resourceTypeId",
+		il.operating_system_id AS "indicator.operatingSystemId",
+		il.event_type AS "indicator.eventType",
+		il.item_type AS "indicator.itemType",
+		il.type AS "indicator.type",
+		a.high_urgent_threshold AS "highUrgentThreshold",
+		a.middle_urgent_threshold AS "middleUrgentThreshold",
+		a.normal_urgent_threshold AS "normalUrgentThreshold",
+		a.tip_threshold AS "tipThreshold",
+		a.gather_type AS "gatherType",
+		a.value AS "value",
+		re.name AS "resource.name"
+	</sql>
+	
+	<sql id="resourceIndicatorlistJoins">
+		LEFT JOIN indicator il ON il.id = a.indicator_id
+		LEFT JOIN resource  re ON re.id = a.resource_id
+	</sql>
+	
+    
+	<select id="get" resultType="ResourceIndicatorlist" >
+		SELECT 
+			<include refid="resourceIndicatorlistColumns"/>
+		FROM resource_indicator_list a
+		<include refid="resourceIndicatorlistJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+
+	<select id="getUpdateList" resultType="ResourceIndicatorlist" >
+		select
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.resource_id AS "resourceId",
+		a.indicator_id AS "indicatorId",
+		a.high_urgent_threshold AS "highUrgentThreshold",
+		a.middle_urgent_threshold AS "middleUrgentThreshold",
+		a.normal_urgent_threshold AS "normalUrgentThreshold",
+		a.tip_threshold AS "tipThreshold",
+		a.gather_type AS "gatherType",
+		a.value AS "value",
+		b.item_type AS "indicator.itemType",
+		b.id AS "indicator.id",
+		b.name AS "indicator.name",
+		b.item_type AS "indicator.itemType",
+		b.resource_type_id AS "indicator.resourceTypeId",
+		b.operating_system_id AS "indicator.operatingSystemId",
+		b.event_type AS "indicator.eventType",
+		b.type AS "indicator.type"
+
+		from resource_indicator_list a
+
+		LEFT JOIN indicator b on a.indicator_id = b.id
+
+		 where a.resource_id= #{resourceId}  and b.resource_type_id = #{resourceTypeId}  and b.type= #{type}
+		<if test="operatingSystemid != null and operatingSystemid != ''">
+			and b.operating_system_id = #{operatingSystemid}
+		</if>
+
+	</select>
+
+
+
+
+	<select id="getUpdateListByCode" resultType="ResourceIndicatorlist" >
+		select
+		a.id AS "id",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.resource_id AS "resourceId",
+		a.indicator_id AS "indicatorId",
+		a.high_urgent_threshold AS "highUrgentThreshold",
+		a.middle_urgent_threshold AS "middleUrgentThreshold",
+		a.normal_urgent_threshold AS "normalUrgentThreshold",
+		a.tip_threshold AS "tipThreshold",
+		a.gather_type AS "gatherType",
+		a.value AS "value",
+		b.item_type AS "indicator.itemType",
+		b.id AS "indicator.id",
+		b.name AS "indicator.name",
+		b.item_type AS "indicator.itemType",
+		b.resource_type_id AS "indicator.resourceTypeId",
+		b.event_type AS "indicator.eventType",
+		b.type AS "indicator.type"
+		from resource_indicator_list a
+		LEFT JOIN indicator b on a.indicator_id = b.id
+		LEFT JOIN resource_type rt on b.resource_type_id = rt.id
+		LEFT JOIN resource_type rtp on rt.parent_id = rtp.id
+
+		where a.resource_id= #{resourceId}  and b.resource_type_id = #{resourceTypeId}  and rtp.code= #{code}
+
+
+	</select>
+
+
+	<update id="setValue">
+		UPDATE resource_indicator_list SET 	value = #{value} ,update_date = #{updateDate}  WHERE id = #{id}
+	</update>
+
+
+
+
+	<select id="findResourceIndicator" resultType="ResourceIndicatorlist" >
+		SELECT
+		<include refid="resourceIndicatorlistColumns"/>
+		FROM resource_indicator_list a
+		<include refid="resourceIndicatorlistJoins"/>
+		WHERE a.resource_id = #{resourceId} AND  a.indicator_id = #{indicatorId}
+	</select>
+
+	<select id="findListByResourceId" resultType="ResourceIndicatorlist" >
+		SELECT
+		<include refid="resourceIndicatorlistColumns"/>
+		FROM resource_indicator_list a
+		<include refid="resourceIndicatorlistJoins"/>
+		WHERE a.resource_id = #{resourceId}
+	</select>
+
+
+	<select id="findListByUser" resultType="ResourceIndicatorlist" >
+		SELECT
+		<include refid="resourceIndicatorlistColumns"/>
+		FROM resource_indicator_list a
+		<include refid="resourceIndicatorlistJoins"/>
+		WHERE a.id IN (SELECT resource_indicator_list_id FROM user_resource_indicator WHERE user_id= #{userId} AND type = #{type})
+	</select>
+
+
+
+
+	
+	<select id="findList" resultType="ResourceIndicatorlist" >
+		SELECT 
+			<include refid="resourceIndicatorlistColumns"/>
+		FROM resource_indicator_list a
+		<include refid="resourceIndicatorlistJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="resourceId != null and resourceId != ''">
+				AND a.resource_id = #{resourceId}
+			</if>
+			<if test="indicatorId != null and indicatorId != ''">
+				AND a.indicator_id = #{indicatorId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ResourceIndicatorlist" >
+		SELECT 
+			<include refid="resourceIndicatorlistColumns"/>
+		FROM resource_indicator_list a
+		<include refid="resourceIndicatorlistJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<select id="findIdsByResource" resultType="String" >
+		SELECT indicator_id FROM resource_indicator_list  WHERE resource_id = #{resourceId}
+	</select>
+
+
+	
+	<insert id="insert">
+		INSERT INTO resource_indicator_list(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			resource_id,
+			indicator_id,
+			value,
+			high_urgent_threshold,
+		    middle_urgent_threshold,
+		    normal_urgent_threshold,
+			gather_type,
+		    tip_threshold
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{resourceId},
+			#{indicatorId},
+			#{value},
+			#{highUrgentThreshold},
+		    #{middleUrgentThreshold},
+		    #{normalUrgentThreshold},
+			#{gatherType},
+		    #{tipThreshold}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE resource_indicator_list SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			resource_id = #{resourceId},
+			indicator_id = #{indicatorId},
+			value = #{value},
+			high_urgent_threshold = #{highUrgentThreshold},
+			middle_urgent_threshold = #{middleUrgentThreshold},
+			normal_urgent_threshold = #{normalUrgentThreshold},
+			gather_type = #{gatherType},
+			tip_threshold = #{tipThreshold}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM resource_indicator_list
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE resource_indicator_list SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="ResourceIndicatorlist" statementType="STATEMENT">
+		select * FROM resource_indicator_list  where ${propertyName} = '${value}'
+	</select>
+
+
+
+	<!--物理删除-->
+	<update id="delById">
+		DELETE FROM resource_indicator_list
+		WHERE id = #{id}
+	</update>
+
+
+	<!--插入操作前删除不在当前指标里的数据-->
+	<update id="delByIndicatorIds">
+		DELETE FROM resource_indicator_list WHERE resource_id = #{resourceId} AND indicator_id NOT IN (#{ids})
+	</update>
+
+
+	<!--删除当前资源下的指标-->
+	<update id="delAllOfResourceByEventType">
+		DELETE FROM resource_indicator_list   WHERE resource_id = #{resourceId}   AND indicator_id IN (SELECT id from indicator WHERE event_type = #{eventType})
+	</update>
+
+
+	<!--批量插入-->
+	<insert id="saveList">
+		INSERT INTO resource_indicator_list(
+		id,
+		create_by,
+		create_date,
+		update_by,
+		update_date,
+		remarks,
+		del_flag,
+		resource_id,
+		indicator_id,
+		value,
+		high_urgent_threshold,
+		middle_urgent_threshold,
+		normal_urgent_threshold,
+		gather_type,
+		tip_threshold
+		)
+		<foreach collection="list" item="item" separator=" union all ">
+			SELECT 	#{item.id},
+			#{item.createBy.id},
+			#{item.createDate},
+			#{item.updateBy.id},
+			#{item.updateDate},
+			#{item.remarks},
+			#{item.delFlag},
+			#{item.resourceId},
+			#{item.indicatorId},
+			#{item.value},
+			#{item.highUrgentThreshold},
+			#{item.middleUrgentThreshold},
+			#{item.normalUrgentThreshold},
+			#{item.gatherType},
+			#{item.tipThreshold} FROM dual
+		</foreach>
+	</insert>
+
+
+	<!--用户与指标关系批量插入-->
+	<insert id="saveUserIndicatorList">
+		INSERT INTO user_resource_indicator(
+		user_id,
+		resource_indicator_list_id,
+		type,
+		modular_title
+		)
+		<foreach collection="list" item="item" separator=" union all ">
+			SELECT 	#{item.userId},
+			#{item.indicatorId},
+			#{item.type},
+			#{item.modularTitle} FROM dual
+		</foreach>
+	</insert>
+
+
+	<select id="getTitle" resultType="String" >
+		SELECT modular_title FROM user_resource_indicator  WHERE user_id = #{userId} AND type=#{type} limit 1
+	</select>
+
+
+	<update id="delByUser">
+		DELETE FROM user_resource_indicator   WHERE user_id = #{userId} AND type = #{type}
+	</update>
+
+
+
+</mapper>

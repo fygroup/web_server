@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.oa.mapper.KnowledgeBaseMapper">
+
+    <sql id="knowledgeBaseColumns">
+        a.id AS "id",
+        u.`name` As "userId",
+        a.cause AS "cause",
+        a.description AS "description",
+        a.plan AS "plan",
+        a.ediId AS "ediId",
+        a.declareType AS "declareType",
+        a.del_flag AS "delFlag"
+    </sql>
+
+    <sql id="knowledgeBaseJoins">
+        left JOIN sys_user u ON u.id=a.userId
+    </sql>
+
+    <select id="get" resultType="KnowledgeBase">
+        SELECT
+        <include refid="knowledgeBaseColumns"/>
+        FROM oa_knowledge_base a
+        <include refid="knowledgeBaseJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="KnowledgeBase">
+        SELECT
+        <include refid="knowledgeBaseColumns"/>
+        FROM oa_knowledge_base a
+        <include refid="knowledgeBaseJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="cause != null and cause != ''">
+                AND a.cause LIKE
+                <if test="dbName == 'mysql'">concat('%',#{cause},'%')</if>
+            </if>
+            <if test="declareType != null and declareType != ''">
+                AND a.declareType LIKE
+                <if test="dbName == 'mysql'">concat('%',#{declareType},'%')</if>
+            </if>
+        </where>
+    </select>
+
+    <select id="findAllList" resultType="KnowledgeBase">
+        SELECT
+        <include refid="knowledgeBaseColumns"/>
+        FROM oa_knowledge_base a
+        <include refid="knowledgeBaseJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+    </select>
+
+    <insert id="insert">
+      INSERT INTO oa_knowledge_base(
+		id,
+		description,
+		cause,
+		plan,
+		userId,
+		ediId,
+		declareType
+		) VALUES (
+		#{id},
+		#{description},
+		#{cause},
+		#{plan},
+		#{userId},
+		#{ediId},
+		#{declareType}
+		)
+    </insert>
+
+    <update id="update">
+        UPDATE oa_knowledge_base SET
+			cause = #{cause},
+			description = #{description},
+			plan = #{plan},
+			ediId = #{ediId},
+			declareType = #{declareType}
+		WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+--         DELETE FROM oa_knowledge_base
+        UPDATE oa_knowledge_base SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+    </update>
+</mapper>

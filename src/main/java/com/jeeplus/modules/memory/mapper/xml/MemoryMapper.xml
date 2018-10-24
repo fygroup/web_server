@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.memory.mapper.MemoryMapper">
+    
+	<sql id="memoryColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.type AS "type",
+		a.resource_id AS "resourceId",
+		a.name AS "name",
+		a.total AS "total",
+		a.used AS "used",
+		a.free AS "free",
+		a.used_rate AS "usedRate"
+	</sql>
+	
+	<sql id="memoryJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="Memory" >
+		SELECT 
+			<include refid="memoryColumns"/>
+		FROM memory a
+		<include refid="memoryJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Memory" >
+		SELECT 
+			<include refid="memoryColumns"/>
+		FROM memory a
+		<include refid="memoryJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="resourceId != null and resourceId != ''">
+				AND a.resource_id = #{resourceId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+
+
+	<select id="findMemoryUsedRateList" resultType="MemoryUsedRate" >
+		SELECT
+		a.create_date AS "createDate",
+		a.resource_id AS "resourceId",
+		a.used_rate AS "usedRate"
+		FROM memory_used_rate a
+		WHERE a.resource_id = #{resourceId}  ORDER BY cast(a.used_rate as decimal(10,3))  DESC
+	</select>
+
+
+
+
+	<select id="findUsedRateListOfTime" resultType="MemoryUsedRate" >
+		SELECT
+		a.create_date AS "createDate",
+		a.resource_id AS "resourceId",
+		a.used_rate AS "usedRate"
+		FROM memory_used_rate a
+		WHERE a.resource_id = #{resourceId} AND  (a.create_date BETWEEN #{beginDate} AND #{endDate}) ORDER BY cast(a.used_rate as decimal(10,3))  DESC
+	</select>
+
+
+	<select id="findTotalUsedRateListOfTime" resultType="String" >
+		SELECT
+		SUM(a.used_rate)
+		FROM memory_used_rate a
+		WHERE a.resource_id = #{resourceId} AND  (a.create_date BETWEEN #{beginDate} AND #{endDate}) ORDER BY cast(a.used_rate as decimal(10,3))  DESC
+	</select>
+
+
+	<select id="findUsedRateListOfTimeType" resultType="MemoryUsedRate" >
+		SELECT
+		a.create_date AS "createDate",
+		a.resource_id AS "resourceId",
+		a.used_rate AS "usedRate"
+		FROM memory_used_rate a
+		LEFT JOIN resource r on r.id = a.resource_id
+	    LEFT JOIN resource_type t on t.id =  r.resource_type
+	    WHERE  t.parent_id =#{resourceTypeId} AND  (a.create_date BETWEEN #{beginDate} AND #{endDate}) ORDER BY cast(a.used_rate as decimal(10,3))  DESC
+	</select>
+
+
+
+
+	<select id="findAllList" resultType="Memory" >
+		SELECT 
+			<include refid="memoryColumns"/>
+		FROM memory a
+		<include refid="memoryJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO memory(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			type,
+			resource_id,
+			name,
+			total,
+			used,
+			free,
+			used_rate
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{type},
+			#{resourceId},
+			#{name},
+			#{total},
+			#{used},
+			#{free},
+			#{usedRate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE memory SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			type = #{type},
+			resource_id = #{resourceId},
+			name = #{name},
+			total = #{total},
+			used = #{used},
+			free = #{free},
+			used_rate = #{usedRate}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM memory
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE memory SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="Memory" statementType="STATEMENT">
+		select * FROM memory  where ${propertyName} = '${value}'
+	</select>
+
+
+
+	<!--根据资源删除-->
+	<update id="delByResourceId">
+		DELETE FROM memory WHERE resource_id = #{id}
+	</update>
+
+	<insert id="saveList">
+		INSERT INTO memory(
+		id,
+		create_by,
+		create_date,
+		update_by,
+		update_date,
+		remarks,
+		del_flag,
+		type,
+		resource_id,
+		name,
+		total,
+		used,
+		free,
+		used_rate
+		)
+		<foreach collection="list" item="memory" separator=" union all ">
+			SELECT 	#{memory.id},
+			#{memory.createBy.id},
+			#{memory.createDate},
+			#{memory.updateBy.id},
+			#{memory.updateDate},
+			#{memory.remarks},
+			#{memory.delFlag},
+			#{memory.type},
+			#{memory.resourceId},
+			#{memory.name},
+			#{memory.total},
+			#{memory.used},
+			#{memory.free},
+			#{memory.usedRate} FROM dual
+		</foreach>
+
+
+	</insert>
+
+
+
+    <!--内存利用率-->
+	<insert id="saveMemoryUsedRate">
+		INSERT INTO memory_used_rate(
+		create_date,
+		resource_id,
+		used_rate
+		) VALUES (
+		  #{memoryUsedRate.createDate},
+		  #{memoryUsedRate.resourceId},
+		  #{memoryUsedRate.usedRate}
+		)
+	</insert>
+
+
+	<select id="getTopMemoryUsedRate" resultType="MemoryUsedRate" >
+		SELECT
+		a.create_date AS "createDate",
+		a.resource_id AS "resourceId",
+		a.used_rate AS "usedRate"
+		FROM memory_used_rate a
+		WHERE a.resource_id = #{resourceId}  ORDER BY a.create_date DESC  limit 1
+	</select>
+
+	<select id="getMemoryPanorama" resultType="MemoryUsedRate" >
+		SELECT
+		a.create_date AS "createDate",
+		a.resource_id AS "resourceId",
+		a.used_rate AS "usedRate"
+		FROM memory_used_rate a
+	</select>
+
+
+
+</mapper>

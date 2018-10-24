@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.oa.mapper.DeviceListMapper">
+
+    <sql id="deviceListColumns">
+        a.id AS "id",
+        a.devName AS "devName",
+        a.devMoney  AS "devMoney",
+        a.state AS "state",
+        a.isUse AS "isUse",
+        a.devSource AS "devSource",
+        a.del_flag AS "delFlag"
+    </sql>
+
+    <sql id="deviceListJoins">
+
+    </sql>
+
+    <select id="get" resultType="DeviceList">
+        SELECT
+        <include refid="deviceListColumns"/>
+        FROM oa_device_list a
+        <include refid="deviceListJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="DeviceList">
+        SELECT
+        <include refid="deviceListColumns"/>
+        FROM oa_device_list a
+        <include refid="deviceListJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="devName != null and devName != ''">
+                AND a.devName LIKE
+                <if test="dbName == 'mysql'">concat('%',#{devName},'%')</if>
+            </if>
+        </where>
+    </select>
+
+    <select id="findAllList" resultType="DeviceList">
+        SELECT
+        <include refid="deviceListColumns"/>
+        FROM oa_device_list a
+        <include refid="deviceListJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+    </select>
+
+    <insert id="insert">
+      INSERT INTO oa_device_list(
+		id,
+        devName,
+        devMoney,
+        state,
+        isUse,
+        devSource
+		) VALUES (
+		#{id},
+		#{devName},
+		#{devMoney},
+		#{state},
+		#{isUse},
+		#{devSource}
+		)
+    </insert>
+
+    <update id="update">
+        UPDATE oa_device_list SET
+            devName=#{devName},
+            devMoney=#{devMoney},
+            state=#{state},
+            isUse=#{isUse},
+            devSource=#{devSource}
+		WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+--         DELETE FROM oa_device_list
+        UPDATE oa_device_list SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+    </update>
+</mapper>

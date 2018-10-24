@@ -1,0 +1,16 @@
+
+package com.jeeplus.modules.test.mapper.treetable;
+
+import com.jeeplus.core.persistence.TreeMapper;
+import com.jeeplus.core.persistence.annotation.MyBatisMapper;
+import com.jeeplus.modules.test.entity.treetable.CarKind;
+
+/**
+ * 车系MAPPER接口
+ * @author lgf
+ * @version 2017-06-12
+ */
+@MyBatisMapper
+public interface CarKindMapper extends TreeMapper<CarKind> {
+	
+}

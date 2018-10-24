@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.linkindicator.mapper.LinkIndicatorMapper">
+    
+	<sql id="linkIndicatorColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.capacity AS "capacity",
+		a.up_link_equequipment AS "upLinkEquequipment",
+		a.up_link_interface AS "upLinkInterface",
+		a.down_link_equequipment AS "downLinkEquequipment",
+		a.down_link_interface AS "downLinkInterface",
+		a.status AS "status",
+		a.up_rate AS "upRate",
+		a.down_rate AS "downRate",
+		a.up_used_rate AS "upUsedRate",
+		a.down_used_rate AS "downUsedRate",
+		a.health_degree AS "healthDegree",
+		a.availability AS "availability",
+		a.resource_id AS "resource.id",
+		a.gather_item  AS "gatherItem",
+		re.name AS "resource.name",
+
+		upE.id AS "upResource.id",
+		upE.name AS "upResource.name",
+		downE.id AS "downResource.id",
+		downE.name AS "downResource.name",
+
+		upN.id AS "upInterface.id",
+		upN.name AS "upInterface.name",
+		downN.id AS "downInterface.id",
+		downN.name AS "downInterface.name"
+
+	</sql>
+
+
+	<select id="getListByLinkEquequipment" resultType="LinkIndicator" >
+		SELECT
+		a.id AS "id",
+		a.capacity AS "capacity",
+		a.up_link_equequipment AS "upLinkEquequipment",
+		a.up_link_interface AS "upLinkInterface",
+		a.down_link_equequipment AS "downLinkEquequipment",
+		a.down_link_interface AS "downLinkInterface",
+		upN.id AS "upInterface.id",
+		upN.name AS "upInterface.name",
+		downN.id AS "downInterface.id",
+		downN.name AS "downInterface.name" FROM link_indicator a
+		LEFT JOIN network_interface upN ON upN.id = a.up_link_interface
+		LEFT JOIN network_interface downN ON downN.id = a.down_link_interface
+		WHERE (up_link_equequipment = #{resourceId} OR down_link_equequipment = #{resourceId})
+	</select>
+
+
+	<select id="checkExist" resultType="Integer" >
+		SELECT count(*) FROM link_indicator WHERE up_link_interface = #{interfaceId} OR down_link_interface = #{interfaceId}
+	</select>
+
+	
+	<sql id="linkIndicatorJoins">
+        LEFT JOIN resource re ON re.id = a.resource_id
+		LEFT JOIN resource upE ON upE.id = a.up_link_equequipment
+		LEFT JOIN resource downE ON downE.id = a.down_link_equequipment
+		LEFT JOIN network_interface upN ON upN.id = a.up_link_interface
+		LEFT JOIN network_interface downN ON downN.id = a.down_link_interface
+	</sql>
+	
+    
+	<select id="get" resultType="LinkIndicator" >
+		SELECT 
+			<include refid="linkIndicatorColumns"/>
+		FROM link_indicator a
+		<include refid="linkIndicatorJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getId" resultType="String" >
+	     select id from link_indicator where (up_link_equequipment = #{up} AND down_link_equequipment = #{down}) OR (up_link_equequipment = #{down} AND down_link_equequipment = #{up})
+	</select>
+
+
+
+
+	<select id="getByTwoResource" resultType="Integer" >
+		SELECT count(*) FROM link_indicator WHERE up_link_equequipment =#{upId} AND down_link_equequipment =#{downId}
+	</select>
+
+
+
+	<select id="getByResource" resultType="LinkIndicator" >
+		SELECT
+		<include refid="linkIndicatorColumns"/>
+		FROM link_indicator a
+		<include refid="linkIndicatorJoins"/>
+		WHERE a.resource_id = #{resourceId}
+	</select>
+
+	
+	<select id="findList" resultType="LinkIndicator" >
+		SELECT 
+			<include refid="linkIndicatorColumns"/>
+		FROM link_indicator a
+		<include refid="linkIndicatorJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="LinkIndicator" >
+		SELECT 
+			<include refid="linkIndicatorColumns"/>
+		FROM link_indicator a
+		<include refid="linkIndicatorJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO link_indicator(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			capacity,
+			up_link_equequipment,
+			up_link_interface,
+			down_link_equequipment,
+			down_link_interface,
+			status,
+			up_rate,
+			down_rate,
+			up_used_rate,
+			down_used_rate,
+			health_degree,
+			availability,
+			resource_id,
+			gather_item
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{capacity},
+			#{upLinkEquequipment},
+			#{upLinkInterface},
+			#{downLinkEquequipment},
+			#{downLinkInterface},
+			#{status},
+			#{upRate},
+			#{downRate},
+			#{upUsedRate},
+			#{downUsedRate},
+			#{healthDegree},
+			#{availability},
+			#{resource.id},
+			#{gatherItem}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE link_indicator SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			capacity = #{capacity},
+			up_link_equequipment = #{upLinkEquequipment},
+			up_link_interface = #{upLinkInterface},
+			down_link_equequipment = #{downLinkEquequipment},
+			down_link_interface = #{downLinkInterface},
+			status = #{status},
+			up_rate = #{upRate},
+			down_rate = #{downRate},
+			up_used_rate = #{upUsedRate},
+			down_used_rate = #{downUsedRate},
+			health_degree = #{healthDegree},
+			availability = #{availability},
+			resource_id = #{resource.id},
+			gather_item = #{gatherItem}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delByResource">
+		DELETE FROM link_indicator
+		WHERE resource_id = #{resourceId}
+	</update>
+
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM link_indicator
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE link_indicator SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="LinkIndicator" statementType="STATEMENT">
+		select * FROM link_indicator  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

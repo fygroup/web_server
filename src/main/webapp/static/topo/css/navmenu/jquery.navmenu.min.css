@@ -1,0 +1,218 @@
+.lightblue.navmenu {
+    -webkit-user-select: none;
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -ms-user-select: none;
+    user-select: none
+}
+
+.lightblue.navmenu ul {
+    float: left;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    white-space: nowrap;
+    background-color: #f0f9ff;
+    background-color: rgba(255, 255, 255, 1);
+    *background-color: #f0f9ff
+}
+
+.lightblue.navmenu ul li {
+    padding: 0;
+    position: relative;
+    white-space: nowrap;
+    cursor: pointer
+}
+
+.lightblue.navmenu ul li.parent {
+    cursor: default；
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+}
+
+.lightblue.navmenu ul li * {
+    vertical-align: middle
+}
+
+.lightblue.navmenu ul.nav {
+    position: relative
+}
+
+.lightblue.navmenu ul.nav li {
+    height: 40px;
+    float: left;
+    font-size: 14px;
+    font-weight: bold;
+    color: #2779aa
+}
+
+.lightblue.navmenu ul.nav li.disabled {
+    color: #858585;
+    cursor: default
+}
+
+.lightblue.navmenu ul.nav li > img.nmitemicon, .lightblue.navmenu ul.nav li > label {
+    height: 30px;
+    width: 10px;
+    margin: 5px 0px;
+    display: inline-block
+}
+
+.lightblue.navmenu ul.nav li > a {
+    margin-right: 25px;
+    line-height: 36px;
+    padding-left: 14px;
+    color: #999;
+    font-weight: normal;
+    font-size: 14px;
+}
+
+.lightblue.navmenu ul.nav li.parent > a {
+    margin-right: 25px;
+    line-height: 36px;
+    padding-left: 14px;
+    color: #999;
+    font-weight: normal;
+    font-size: 14px;
+}
+
+.lightblue.navmenu ul.nav li > span {
+    position: absolute;
+    top: 15px;
+    right: 5px;
+    height: 5px;
+    width: 5px;
+    background: url(pointer.png) 0 0;
+    margin: 2px 5px;
+    display: inline-block
+}
+
+.lightblue.navmenu ul.nav li.on {
+    color: #fff;
+}
+
+.lightblue.navmenu ul.nav li.on > span {
+    background-position: -5px 0
+}
+
+.lightblue.navmenu ul.nav li.block {
+    position: absolute;
+    height: 39px;
+    top: 0;
+    background: #FDFDFD;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    display: none;
+    cursor: default
+}
+
+.lightblue.navmenu ul.nav li.block.disabled {
+    background: #f5f5f5
+}
+
+.lightblue.navmenu ul.nav li div.cover {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 0;
+    display: none;
+}
+
+.lightblue.navmenu ul.nav li div.cover ul.menu {
+    margin-top: 1px;
+    position: relative;
+    border: 1px solid #f5f5f5;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    -moz-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.175);
+    -webkit-box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.175);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.175)
+}
+
+.lightblue.navmenu ul.nav li div.cover ul.menu li {
+    width: 100%;
+    height: 36px;
+    line-height: 36px;
+    min-width: 106px;
+    margin: 0;
+    float: none;
+    font-size: 12px;
+    font-weight: normal;
+    color: #000;
+    text-shadow: none
+}
+
+.lightblue.navmenu ul.nav li div.cover ul.menu li.on {
+    background-color: #f5f5f5;
+    color: #999
+}
+
+.lightblue.navmenu ul.nav li div.cover ul.menu li.disabled {
+    color: #858585
+}
+
+.lightblue.navmenu ul.nav li div.cover ul.menu li.on.disabled {
+    background: #f5f5f5
+}
+
+.lightblue.navmenu ul.nav li div.cover ul.menu li.separator {
+    height: 2px;
+    background: transparent;
+    cursor: normal
+}
+
+.lightblue.navmenu ul.nav li div.cover ul.menu li.separator hr {
+    height: 0;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin-top: 1px
+}
+
+.lightblue.navmenu ul.nav li div.cover ul.menu li > img.nmitemicon, .lightblue.navmenu ul.nav li div.cover ul.menu li > label {
+    height: 0px;
+    width: 0px;
+    display: inline-block
+}
+
+.lightblue.navmenu ul.nav li div.cover ul.menu li > a {
+    margin: 5px 10px 5px 0
+}
+
+.lightblue.navmenu ul.nav li div.cover ul.menu li > a {
+    margin-right: 30px
+}
+
+.lightblue.navmenu ul.nav li div.cover ul.menu li > span {
+    position: absolute;
+    top: 16px;
+    right: 10px;
+    height: 5px;
+    width: 5px;
+    background: url(pointer.png) -10px 0;
+    display: inline-block
+}
+
+.lightblue.navmenu ul.nav li div.cover ul.menu li.on > span {
+    background-position: -10px 0
+}
+
+.lightblue.navmenu ul.nav li div.cover ul.menu li.disabled > span {
+    background-position: -10px 0
+}
+
+.lightblue.navmenu ul.nav li div.cover ul.menu li div.cover {
+    margin-top: 0;
+    margin-left: 0;
+    top: -6px;
+    left: 100%
+}
+
+.lightblue.navmenu ul.nav li div.cover ul.menu li div.cover ul.menu {
+    margin-top: 0;
+    margin-left: 4px
+}
+
+.lightblue.navmenu ul.nav li div.cover ul.menu li div.cover ul.menu li {
+    min-width: 150px
+}

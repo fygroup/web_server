@@ -1,0 +1,378 @@
+<div class="network-adapter">
+				<div class="network-adapter-container">
+					<div class="network-adapter-left">
+						<div class="network-adapter-left-top">
+							<p>Cisco Systerms</p>
+							<img class="" src="${ctxStatic}/common/images/hump_map.png" width="100%">
+						</div>
+						<ul class="push-button-container">
+							<li >SYSTEM<i class="push-button"></i></li>
+							<li >RPS<i class="push-button"></i></li>
+							<li >STAT<i class="push-button"></i></li>
+							<li >UTIL<i class="push-button"></i></li>
+							<li >DUPLX<i class="push-button"></i></li>
+							<li >SPEED<i class="push-button"></i></li>
+							<li >MODE<i class="push-button-mode"></i></li>
+						</ul>
+					</div>
+					<div class="network-adapter-mid">
+						<div class="network-adapter-mid-contact">
+							<ul>
+								<li>
+									<div id="interface1" class="network-adapter-mid-li-top">
+										<p>1</p>
+										<div id="FastEthernet0_1">
+											<img src="${ctxStatic}/common/images/interface_up.png"  width="100%">
+										</div>
+									</div>
+									<div id="interface2" class="network-adapter-mid-li-top">
+										<div id="FastEthernet0_2">
+											<img src="${ctxStatic}/common/images/interface_down.png"   width="100%">
+										</div>
+										<p>2</p>
+									</div>
+								</li>
+								<li>
+									<div id="interface3" class="network-adapter-mid-li-top">
+										<p>3</p>
+										<div id="FastEthernet0_3">
+											<img src="${ctxStatic}/common/images/interface_up.png"   width="100%">
+										</div>
+									</div>
+									<div id="interface4" class="network-adapter-mid-li-top">
+										<div  id="FastEthernet0_4" >
+											<img src="${ctxStatic}/common/images/interface_down.png" width="100%">
+										</div>
+										<p>4</p>
+									</div>
+								</li>
+								<li>
+									<div id="interface5" class="network-adapter-mid-li-top">
+										<p>5</p>
+										<div id="FastEthernet0_5" >
+											<img src="${ctxStatic}/common/images/interface_up.png"   width="100%">
+										</div>
+									</div>
+									<div id="interface6" class="network-adapter-mid-li-top">
+										<div id="FastEthernet0_6">
+											<img src="${ctxStatic}/common/images/interface_down.png"  width="100%">
+										</div>
+										<p>6</p>
+									</div>
+								</li>
+								<li>
+									<div id="interface7" class="network-adapter-mid-li-top">
+										<p>7</p>
+										<div id="FastEthernet0_7">
+											<img src="${ctxStatic}/common/images/interface_up.png"  width="100%">
+										</div>
+									</div>
+									<div id="interface8" class="network-adapter-mid-li-top">
+										<div id="FastEthernet0_8">
+											<img src="${ctxStatic}/common/images/interface_down.png"  width="100%">
+										</div>
+										<p>8</p>
+									</div>
+								</li>
+								<li>
+									<div id="interface9" class="network-adapter-mid-li-top">
+										<p>9</p>
+										<div id="FastEthernet0_9">
+											<img src="${ctxStatic}/common/images/interface_up.png"  width="100%">
+										</div>
+									</div>
+									<div id="interface10" class="network-adapter-mid-li-top">
+										<div id="FastEthernet0_10">
+											<img src="${ctxStatic}/common/images/interface_down.png"  width="100%">
+										</div>
+										<p>10</p>
+									</div>
+								</li>
+								<li>
+									<div id="interface11" class="network-adapter-mid-li-top">
+										<p>11</p>
+										<div id="FastEthernet0_11">
+											<img src="${ctxStatic}/common/images/interface_up.png"   width="100%">
+										</div>
+									</div>
+									<div id="interface12" class="network-adapter-mid-li-top">
+										<div id="FastEthernet0_12">
+											<img src="${ctxStatic}/common/images/interface_down.png"   width="100%">
+										</div>
+										<p>12</p>
+									</div>
+								</li>
+								<li>
+									<div id="interface13" class="network-adapter-mid-li-top">
+										<p>13</p>
+										<div id="FastEthernet0_13">
+											<img src="${ctxStatic}/common/images/interface_up.png"   width="100%">
+										</div>
+									</div>
+									<div id="interface14" class="network-adapter-mid-li-top">
+										<div id="FastEthernet0_14" >
+											<img src="${ctxStatic}/common/images/interface_down.png"  width="100%">
+										</div>
+										<p>14</p>
+									</div>
+								</li>
+								<li>
+									<div id="interface15" class="network-adapter-mid-li-top">
+										<p>15</p>
+										<div id="FastEthernet0_15" >
+											<img src="${ctxStatic}/common/images/interface_up.png"  width="100%">
+										</div>
+									</div>
+									<div id="interface16" class="network-adapter-mid-li-top">
+										<div id="FastEthernet0_16">
+											<img src="${ctxStatic}/common/images/interface_down.png"   width="100%">
+										</div>
+										<p>16</p>
+									</div>
+								</li>
+							</ul>
+							<ul>
+								<li>
+									<div id="interface17" class="network-adapter-mid-li-top">
+										<p>17</p>
+										<div id="FastEthernet0_17">
+											<img src="${ctxStatic}/common/images/interface_up.png" width="100%">
+										</div>
+									</div>
+									<div id="interface18" class="network-adapter-mid-li-top">
+										<div id="FastEthernet0_18">
+											<img src="${ctxStatic}/common/images/interface_down.png" width="100%">
+										</div>
+										<p>18</p>
+									</div>
+								</li>
+								<li>
+									<div id="interface19" class="network-adapter-mid-li-top">
+										<p>19</p>
+										<div id="FastEthernet0_19">
+											<img src="${ctxStatic}/common/images/interface_up.png" width="100%">
+										</div>
+									</div>
+									<div id="interface20" class="network-adapter-mid-li-top">
+										<div id="FastEthernet0_20">
+											<img src="${ctxStatic}/common/images/interface_down.png" width="100%">
+										</div>
+										<p>20</p>
+									</div>
+								</li>
+								<li>
+									<div id="interface21" class="network-adapter-mid-li-top">
+										<p>21</p>
+										<div  id="FastEthernet0_21">
+											<img src="${ctxStatic}/common/images/interface_up.png" width="100%">
+										</div>
+									</div>
+									<div id="interface22" class="network-adapter-mid-li-top">
+										<div id="FastEthernet0_22">
+											<img src="${ctxStatic}/common/images/interface_down.png" width="100%">
+										</div>
+										<p>22</p>
+									</div>
+								</li>
+								<li>
+									<div id="interface23" class="network-adapter-mid-li-top">
+										<p>23</p>
+										<div  id="FastEthernet0_23">
+											<img src="${ctxStatic}/common/images/interface_up.png" width="100%">
+										</div>
+									</div>
+									<div id="interface24" class="network-adapter-mid-li-top">
+										<div id="FastEthernet0_24">
+											<img src="${ctxStatic}/common/images/interface_down.png" width="100%">
+										</div>
+										<p>24</p>
+									</div>
+								</li>
+								<li>
+									<div id="interface25" class="network-adapter-mid-li-top">
+										<p>25</p>
+										<div  id="FastEthernet0_25">
+											<img src="${ctxStatic}/common/images/interface_up.png" width="100%">
+										</div>
+									</div>
+									<div id="interface26" class="network-adapter-mid-li-top">
+										<div  id="FastEthernet0_26">
+											<img src="${ctxStatic}/common/images/interface_down.png" width="100%">
+										</div>
+										<p>26</p>
+									</div>
+								</li>
+								<li>
+									<div id="interface27" class="network-adapter-mid-li-top">
+										<p>27</p>
+										<div  id="FastEthernet0_27">
+											<img src="${ctxStatic}/common/images/interface_up.png" width="100%">
+										</div>
+									</div>
+									<div id="interface28" class="network-adapter-mid-li-top">
+										<div  id="FastEthernet0_28">
+											<img src="${ctxStatic}/common/images/interface_down.png" width="100%">
+										</div>
+										<p>28</p>
+									</div>
+								</li>
+								<li>
+									<div id="interface29" class="network-adapter-mid-li-top">
+										<p>29</p>
+										<div  id="FastEthernet0_29">
+											<img src="${ctxStatic}/common/images/interface_up.png" width="100%">
+										</div>
+									</div>
+									<div id="interface30" class="network-adapter-mid-li-top">
+										<div  id="FastEthernet0_30">
+											<img src="${ctxStatic}/common/images/interface_down.png" width="100%">
+										</div>
+										<p>30</p>
+									</div>
+								</li>
+								<li>
+									<div id="interface31" class="network-adapter-mid-li-top">
+										<p>15</p>
+										<div  id="FastEthernet0_31">
+											<img src="${ctxStatic}/common/images/interface_up.png" width="100%">
+										</div>
+									</div>
+									<div id="interface32" class="network-adapter-mid-li-top">
+										<div id="FastEthernet0_32">
+											<img src="${ctxStatic}/common/images/interface_down.png" width="100%">
+										</div>
+										<p>32</p>
+									</div>
+								</li>
+							</ul>
+							<ul>
+								<li>
+									<div id="interface133" class="network-adapter-mid-li-top">
+										<p>33</p>
+										<div   id="FastEthernet0_33">
+											<img src="${ctxStatic}/common/images/interface_up.png" width="100%">
+										</div>
+									</div>
+									<div id="interface34" class="network-adapter-mid-li-top">
+										<div   id="FastEthernet0_34">
+											<img src="${ctxStatic}/common/images/interface_down.png" width="100%">
+										</div>
+										<p>34</p>
+									</div>
+								</li>
+								<li>
+									<div id="interface35" class="network-adapter-mid-li-top">
+										<p>35</p>
+										<div   id="FastEthernet0_35">
+											<img src="${ctxStatic}/common/images/interface_up.png" width="100%">
+										</div>
+									</div>
+									<div id="interface36" class="network-adapter-mid-li-top">
+										<div   id="FastEthernet0_36">
+											<img src="${ctxStatic}/common/images/interface_down.png" width="100%">
+										</div>
+										<p>36</p>
+									</div>
+								</li>
+								<li>
+									<div id="interface37" class="network-adapter-mid-li-top">
+										<p>37</p>
+										<div   id="FastEthernet0_37">
+											<img src="${ctxStatic}/common/images/interface_up.png" width="100%">
+										</div>
+									</div>
+									<div id="interface38" class="network-adapter-mid-li-top">
+										<div   id="FastEthernet0_38">
+											<img src="${ctxStatic}/common/images/interface_down.png" width="100%">
+										</div>
+										<p>38</p>
+									</div>
+								</li>
+								<li>
+									<div id="interface39" class="network-adapter-mid-li-top">
+										<p>39</p>
+										<div   id="FastEthernet0_39">
+											<img src="${ctxStatic}/common/images/interface_up.png" width="100%">
+										</div>
+									</div>
+									<div id="interface40" class="network-adapter-mid-li-top">
+										<div   id="FastEthernet0_40">
+											<img src="${ctxStatic}/common/images/interface_down.png" width="100%">
+										</div>
+										<p>40</p>
+									</div>
+								</li>
+								<li>
+									<div id="interface41" class="network-adapter-mid-li-top">
+										<p>41</p>
+										<div id="FastEthernet0_41">
+											<img src="${ctxStatic}/common/images/interface_up.png" width="100%">
+										</div>
+									</div>
+									<div id="interface42" class="network-adapter-mid-li-top">
+										<div id="FastEthernet0_42">
+											<img src="${ctxStatic}/common/images/interface_down.png" width="100%">
+										</div>
+										<p>42</p>
+									</div>
+								</li>
+								<li>
+									<div id="interface43" class="network-adapter-mid-li-top">
+										<p>43</p>
+										<div id="FastEthernet0_43">
+											<img src="${ctxStatic}/common/images/interface_up.png" width="100%">
+										</div>
+									</div>
+									<div id="interface44" class="network-adapter-mid-li-top">
+										<div id="FastEthernet0_44">
+											<img src="${ctxStatic}/common/images/interface_down.png" width="100%">
+										</div>
+										<p>44</p>
+									</div>
+								</li>
+								<li>
+									<div id="interface45" class="network-adapter-mid-li-top">
+										<p>45</p>
+										<div id="FastEthernet0_45">
+											<img src="${ctxStatic}/common/images/interface_up.png" width="100%">
+										</div>
+									</div>
+									<div id="interface46" class="network-adapter-mid-li-top">
+										<div id="FastEthernet0_46">
+											<img src="${ctxStatic}/common/images/interface_down.png" width="100%">
+										</div>
+										<p>46</p>
+									</div>
+								</li>
+								<li>
+									<div id="interface47" class="network-adapter-mid-li-top">
+										<p>47</p>
+										<div id="FastEthernet0_47">
+											<img src="${ctxStatic}/common/images/interface_up.png" width="100%">
+										</div>
+									</div>
+									<div id="interface48" class="network-adapter-mid-li-top">
+										<div id="FastEthernet0_48">
+											<img src="${ctxStatic}/common/images/interface_down.png" width="100%">
+										</div>
+										<p>48</p>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="network-adapter-right">
+						<div class="network-adapter-right-title">Catalyst 3584xl</div>
+						<div class="network-adapter-right-contact">
+							<div class="interface-first" id="GigabitEthernet0_1" >
+								<img  src="${ctxStatic}/common/images/interface_two.png" width="100%">
+								<div class="interface-first-operation">
+									<p>关闭</p>
+									<p>打开</p>
+								</div>
+							</div>
+							<div class="interface-first" id="GigabitEthernet0_2"><img  src="${ctxStatic}/common/images/interface_two.png" width="100%"></div>
+						</div>
+					</div>
+				</div>
+			</div>

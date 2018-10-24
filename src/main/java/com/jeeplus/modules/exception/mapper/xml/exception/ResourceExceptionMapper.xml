@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.exception.mapper.exception.ResourceExceptionMapper">
+    
+	<sql id="resourceExceptionColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.exception_source AS "exceptionSource",
+		a.indicator_name AS "indicatorName",
+		a.total_quantity AS "totalQuantity",
+		a.exception_class AS "exceptionClass",
+		a.current_value AS "currentValue",
+		a.current_status AS "currentStatus",
+		a.first_trigger_value AS "firstTriggerValue",
+		a.first_trigger_class AS "firstTriggerClass",
+		a.first_trigger_time AS "firstTriggerTime",
+		a.resource_indicator_list_id AS "resourceIndicator.id",
+		a.last_trigger_time AS "lastTriggerTime",
+		a.resource_type_id AS "resourceType.id",
+		a.event_type AS "eventType",
+		a.confirm_status AS "confirmStatus",
+		a.confirm_user_id AS "confirmUser.id",
+		a.office_id AS "office.id",
+		a.indicator_id AS "indicatorItem.id",
+		resourceType.name AS "resourceType.name",
+		confirmUser.name AS "confirmUser.name",
+		office.name AS "office.name",
+		indicatorItem.name AS "indicatorItem.name",
+		indicatorItem.unit AS "indicatorItem.unit",
+		indicatorItem.event_type AS "indicatorItem.eventType",
+		resourceIndicator.resource_id AS "resourceId"
+	</sql>
+	
+	<sql id="resourceExceptionJoins">
+		LEFT JOIN resource_indicator_list resourceIndicator ON resourceIndicator.id = a.resource_indicator_list_id
+		LEFT JOIN resource_type resourceType ON resourceType.id = a.resource_type_id
+		LEFT JOIN sys_user confirmUser ON confirmUser.id = a.confirm_user_id
+		LEFT JOIN sys_office office ON office.id = a.office_id
+		LEFT JOIN indicator indicatorItem ON indicatorItem.id = a.indicator_id
+	</sql>
+	
+    
+	<select id="get" resultType="ResourceException" >
+		SELECT 
+			<include refid="resourceExceptionColumns"/>
+		FROM resource_exception a
+		<include refid="resourceExceptionJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getByResourceIndicatorId" resultType="ResourceException" >
+		SELECT
+		<include refid="resourceExceptionColumns"/>
+		FROM resource_exception a
+		<include refid="resourceExceptionJoins"/>
+		WHERE a.resource_indicator_list_id  = #{resourceIndicatorId}  AND a.current_status  = '0'
+	</select>
+
+
+	<select id="findList" resultType="ResourceException" >
+		SELECT 
+			<include refid="resourceExceptionColumns"/>
+		FROM resource_exception a
+		<include refid="resourceExceptionJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="exceptionSource != null and exceptionSource != ''">
+				AND a.exception_source = #{exceptionSource}
+			</if>
+			<if test="indicatorName != null and indicatorName != ''">
+				AND a.indicator_name = #{indicatorName}
+			</if>
+			<if test="exceptionClass != null and exceptionClass != ''">
+				AND a.exception_class = #{exceptionClass}
+			</if>
+			<if test="currentStatus != null and currentStatus != ''">
+				AND a.current_status = #{currentStatus}
+			</if>
+			<if test="beginFirstTriggerTime != null and endFirstTriggerTime != null and beginFirstTriggerTime != '' and endFirstTriggerTime != ''">
+				AND a.first_trigger_time BETWEEN #{beginFirstTriggerTime} AND #{endFirstTriggerTime}
+			</if>
+			<if test="lastTriggerTime != null and lastTriggerTime != ''">
+				AND a.last_trigger_time = #{lastTriggerTime}
+			</if>
+			<if test="resourceType != null and resourceType.id != null and resourceType.id != ''">
+				AND a.resource_type_id = #{resourceType.id}
+			</if>
+			<if test="eventType != null and eventType != ''">
+				AND a.event_type = #{eventType}
+			</if>
+			<if test="confirmUser != null and confirmUser.id != null and confirmUser.id != ''">
+				AND a.confirm_user_id = #{confirmUser.id}
+			</if>
+			<if test="area != null and area.id != null and area.id != ''">
+				AND a.area_id = #{area.id}
+			</if>
+			<if test="office != null and office.id != null and office.id != ''">
+				AND a.office_id = #{office.id}
+			</if>
+			<if test="indicatorItem != null and indicatorItem.id != null and indicatorItem.id != ''">
+				AND a.indicator_id = #{indicatorItem.id}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<select id="findListByResource" resultType="ResourceException" >
+		SELECT
+		<include refid="resourceExceptionColumns"/>
+		FROM resource_exception a
+			LEFT JOIN resource_indicator_list resourceIndicator ON resourceIndicator.id = a.resource_indicator_list_id
+			LEFT JOIN resource_type resourceType ON resourceType.id = a.resource_type_id
+			LEFT JOIN sys_user confirmUser ON confirmUser.id = a.confirm_user_id
+			LEFT JOIN sys_office office ON office.id = a.office_id
+			LEFT JOIN indicator indicatorItem ON indicatorItem.id = a.indicator_id
+		    WHERE  a.current_status = '0' AND resourceIndicator.resource_id = #{resourceId}
+				<if test="exceptionClass != null and exceptionClass != ''">
+					AND a.exception_class = #{exceptionClass}
+				</if>
+		    ORDER BY a.create_date DESC
+
+	</select>
+
+
+
+
+
+	<select id="findListByResourceDate" resultType="ResourceException" >
+		SELECT
+		a.id AS "id",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.exception_source AS "exceptionSource",
+		a.indicator_name AS "indicatorName",
+		a.total_quantity AS "totalQuantity",
+		(select label from  sys_dict_value where dict_type_id='b086ef09eefb46d99f90dee23b7d66db' and value=a.exception_class ) AS "exceptionClass",
+		a.current_value AS "currentValue",
+		a.current_status AS "currentStatus",
+		a.first_trigger_value AS "firstTriggerValue",
+		a.first_trigger_class AS "firstTriggerClass",
+		a.first_trigger_time AS "firstTriggerTime",
+		a.resource_indicator_list_id AS "resourceIndicator.id",
+		a.last_trigger_time AS "lastTriggerTime",
+		a.resource_type_id AS "resourceType.id",
+		a.event_type AS "eventType",
+		a.confirm_status AS "confirmStatus",
+		a.confirm_user_id AS "confirmUser.id",
+		a.office_id AS "office.id",
+		a.indicator_id AS "indicatorItem.id"
+		FROM resource_exception a
+		LEFT JOIN resource_indicator_list resourceIndicator ON resourceIndicator.id = a.resource_indicator_list_id
+		LEFT JOIN resource_type resourceType ON resourceType.id = a.resource_type_id
+		LEFT JOIN sys_user confirmUser ON confirmUser.id = a.confirm_user_id
+		LEFT JOIN sys_office office ON office.id = a.office_id
+		LEFT JOIN indicator indicatorItem ON indicatorItem.id = a.indicator_id
+		WHERE  a.current_status = '0' AND resourceIndicator.resource_id = #{resourceId}
+		     AND  (a.create_date BETWEEN #{beginDate} AND #{endDate})
+		<if test="exceptionClass != null and exceptionClass != ''">
+			AND a.exception_class = #{exceptionClass}
+		</if>
+		ORDER BY a.create_date DESC
+
+	</select>
+
+
+
+	<select id="indexFindList" resultType="ResourceException" >
+		SELECT
+		<include refid="resourceExceptionColumns"/>
+		FROM resource_exception a
+		LEFT JOIN resource_indicator_list resourceIndicator ON resourceIndicator.id = a.resource_indicator_list_id
+		LEFT JOIN resource_type resourceType ON resourceType.id = a.resource_type_id
+		LEFT JOIN sys_user confirmUser ON confirmUser.id = a.confirm_user_id
+		LEFT JOIN sys_office office ON office.id = a.office_id
+		LEFT JOIN indicator indicatorItem ON indicatorItem.id = a.indicator_id
+		WHERE  a.current_status = '0'
+		ORDER BY a.create_date DESC limit 10
+
+	</select>
+	
+	<select id="findAllList" resultType="ResourceException" >
+		SELECT 
+			<include refid="resourceExceptionColumns"/>
+		FROM resource_exception a
+		<include refid="resourceExceptionJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO resource_exception(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			exception_source,
+			indicator_name,
+			total_quantity,
+			exception_class,
+			current_value,
+			current_status,
+			first_trigger_value,
+			first_trigger_class,
+			first_trigger_time,
+			resource_indicator_list_id,
+			last_trigger_time,
+			resource_type_id,
+			event_type,
+			confirm_status,
+			confirm_user_id,
+			area_id,
+			office_id,
+			indicator_id
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{exceptionSource},
+			#{indicatorName},
+			#{totalQuantity},
+			#{exceptionClass},
+			#{currentValue},
+			#{currentStatus},
+			#{firstTriggerValue},
+			#{firstTriggerClass},
+			#{firstTriggerTime},
+			#{resourceIndicator.id},
+			#{lastTriggerTime},
+			#{resourceType.id},
+			#{eventType},
+			#{confirmStatus},
+			#{confirmUser.id},
+			#{area.id},
+			#{office.id},
+			#{indicatorItem.id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE resource_exception SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			exception_source = #{exceptionSource},
+			indicator_name = #{indicatorName},
+			total_quantity = #{totalQuantity},
+			exception_class = #{exceptionClass},
+			current_value = #{currentValue},
+			current_status = #{currentStatus},
+			first_trigger_value = #{firstTriggerValue},
+			first_trigger_class = #{firstTriggerClass},
+			first_trigger_time = #{firstTriggerTime},
+			resource_indicator_list_id = #{resourceIndicator.id},
+			last_trigger_time = #{lastTriggerTime},
+			resource_type_id = #{resourceType.id},
+			event_type = #{eventType},
+			confirm_status = #{confirmStatus},
+			confirm_user_id = #{confirmUser.id},
+			area_id = #{area.id},
+			office_id = #{office.id},
+			indicator_id = #{indicatorItem.id}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM resource_exception
+		WHERE id = #{id}
+	</update>
+
+
+	<!--手动恢复,手动恢复后即确认-->
+	<update id="manualRecovery">
+		UPDATE resource_exception SET update_date = #{updateDate}, current_status = #{currentStatus},confirm_status = #{confirmStatus},confirm_user_id = #{confirmUserId} WHERE id = #{id}
+	</update>
+
+
+	<!--异常确认-->
+	<update id="confirmException">
+		UPDATE resource_exception SET update_date = #{updateDate},confirm_status = #{confirmStatus},confirm_user_id = #{confirmUserId} WHERE id = #{id}
+	</update>
+
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE resource_exception SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="ResourceException" statementType="STATEMENT">
+		select * FROM resource_exception  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.viruses.mapper.VirusesMapper">
+    
+	<sql id="virusesColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.resource_id AS "resourceId",
+		a.sort AS "sort",
+		a.name AS "name",
+		a.value AS "value"
+	</sql>
+	
+	<sql id="virusesJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="Viruses" >
+		SELECT 
+			<include refid="virusesColumns"/>
+		FROM attack a
+		<include refid="virusesJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getWithResourceId" resultType="Viruses" >
+		SELECT
+			<include refid="virusesColumns"/>
+		FROM cpu a
+		<include refid="virusesJoins"/>
+		WHERE a.resource_id = #{resourceId}
+	</select>
+	
+	<select id="findList" resultType="Viruses" >
+		SELECT 
+			<include refid="virusesColumns"/>
+		FROM cpu a
+		<include refid="virusesJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="resourceId != null and resourceId != ''">
+				AND a.resource_id = #{resourceId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.sort ASC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="Viruses" >
+		SELECT 
+			<include refid="virusesColumns"/>
+		FROM cpu a
+		<include refid="virusesJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.sort ASC
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<select id="getTopViruses" resultType="Viruses" >
+		SELECT
+		v.create_date AS "createDate",
+		v.resource_id AS "resourceId",
+		v.value AS "value",
+		v.id AS "id"
+		FROM viruses v
+		WHERE v.resource_id = #{resourceId}  ORDER BY v.create_date DESC  limit 1
+	</select>
+
+
+
+
+</mapper>

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.indicator.mapper.IndicatorMapper">
+    
+	<sql id="indicatorColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.name AS "name",
+		a.item_type AS "itemType",
+		a.resource_type_id AS "resourceTypeId",
+		resourceType.name AS "resourceType.name",
+		a.operating_system_id AS "operatingSystemId",
+		operatingSystem.name AS "operatingSystem.name",
+		a.event_type AS "eventType",
+		a.unit AS "unit",
+		a.type AS "type",
+		a.description AS "description"
+	</sql>
+	
+	<sql id="indicatorJoins">
+			LEFT JOIN resource_type resourceType ON resourceType.id = a.resource_type_id
+			LEFT JOIN operating_system operatingSystem ON operatingSystem.id = a.operating_system_id
+	</sql>
+	
+    
+	<select id="get" resultType="Indicator" >
+		SELECT 
+			<include refid="indicatorColumns"/>
+		FROM indicator a
+		<include refid="indicatorJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+
+	<select id="getByType" resultType="Indicator" >
+		SELECT
+		<include refid="indicatorColumns"/>
+		FROM indicator a
+		<include refid="indicatorJoins"/>
+		WHERE a.type = #{type}
+	</select>
+
+
+	
+	<select id="findList" resultType="Indicator" >
+		SELECT 
+			<include refid="indicatorColumns"/>
+		FROM indicator a
+		<include refid="indicatorJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="resourceTypeId != null and resourceTypeId != ''">
+				AND a.resource_type_id = #{resourceTypeId}
+			</if>
+			<if test="operatingSystemId != null and operatingSystemId != ''">
+				AND a.operating_system_id = #{operatingSystemId}
+			</if>
+			<if test="eventType != null and eventType != ''">
+				AND a.event_type = #{eventType}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Indicator" >
+		SELECT 
+			<include refid="indicatorColumns"/>
+		FROM indicator a
+		<include refid="indicatorJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+
+
+
+	<insert id="insert">
+		INSERT INTO indicator(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			name,
+			resource_type_id,
+			operating_system_id,
+			event_type,
+			unit,
+			type,
+			description,
+			item_type
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{name},
+			#{resourceTypeId},
+			#{operatingSystemId},
+			#{eventType},
+			#{unit},
+			#{type},
+			#{description},
+			#{itemType}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE indicator SET
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			name = #{name},
+			resource_type_id = #{resourceTypeId},
+			operating_system_id = #{operatingSystemId},
+			event_type = #{eventType},
+			unit  = #{unit},
+			type = #{type},
+			description = #{description},
+			item_type = #{itemType}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM indicator
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE indicator SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="Indicator" statementType="STATEMENT">
+		select * FROM indicator  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.networkinterface.mapper.NetworkInterfaceMapper">
+    
+	<sql id="networkInterfaceColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.sort AS "sort",
+		a.resource_id AS "resourceId",
+		a.capacity AS "capacity",
+		a.status AS "status",
+		a.abnormal_grade AS "abnormalGrade",
+		a.input_byte AS "inputByte",
+		a.output_byte AS "outputByte",
+		a.template AS "template",
+		a.name AS "name",
+		a.interface_type AS "interfaceType",
+		a.mac AS "mac",
+		a.input_rate AS "inputRate",
+		a.output_rate AS "outputRate"
+	</sql>
+	
+	<sql id="networkInterfaceJoins">
+
+	</sql>
+	
+    
+	<select id="get" resultType="NetworkInterface" >
+		SELECT 
+			<include refid="networkInterfaceColumns"/>
+		FROM network_interface a
+		<include refid="networkInterfaceJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+
+
+	<select id="list" resultType="NetworkInterface" >
+	   SELECT
+	    <include refid="networkInterfaceColumns"/>
+	  FROM network_interface a
+	</select>
+	
+	<select id="findList" resultType="NetworkInterface" >
+		SELECT 
+			<include refid="networkInterfaceColumns"/>
+		FROM network_interface a
+		<include refid="networkInterfaceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="resourceId != null and resourceId != ''">
+				AND a.resource_id = #{resourceId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.sort ASC
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<select id="findListByResourceTypeCode" resultType="NetworkInterface" >
+		SELECT
+		a.id AS "id",
+		a.resource_id AS "resourceId",
+		a.name AS "name"
+		FROM network_interface a
+		WHERE a.resource_id IN (select id from resource WHERE resource_type IN (SELECT id FROM resource_type WHERE parent_id in (select id from resource_type where code = #{code}) ))
+
+		ORDER BY a.sort ASC
+
+	</select>
+
+
+	<select id="onlineNetInterface" resultType="NetworkInterface" >
+		SELECT
+		a.id AS "id",
+		a.name AS "name"
+		FROM network_interface a
+		WHERE a.resource_id = #{resourceId} AND a.status  = '1'
+		ORDER BY a.sort ASC
+
+	</select>
+
+
+
+
+	<select id="findListBySort" resultType="NetworkInterface" >
+		SELECT
+		<include refid="networkInterfaceColumns"/>
+		FROM network_interface a
+		WHERE  a.resource_id = #{resourceId} ORDER BY a.sort ASC
+	</select>
+
+
+
+
+
+	
+	<select id="findAllList" resultType="NetworkInterface" >
+		SELECT 
+			<include refid="networkInterfaceColumns"/>
+		FROM network_interface a
+		<include refid="networkInterfaceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.sort ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO network_interface(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			sort,
+			resource_id,
+			capacity,
+			status,
+			abnormal_grade,
+			input_byte,
+			output_byte,
+			template,
+			name,
+			interface_type,
+		     mac,
+		     input_rate,
+		     output_rate
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{sort},
+			#{resourceId},
+			#{capacity},
+			#{status},
+			#{abnormalGrade},
+			#{inputByte},
+			#{outputByte},
+			#{template},
+			#{name},
+			#{interfaceType},
+		    #{mac},
+		    #{inputRate},
+		    #{outputRate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE network_interface SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			sort = #{sort},
+			resource_id = #{resourceId},
+			capacity = #{capacity},
+			status = #{status},
+			abnormal_grade = #{abnormalGrade},
+			input_byte = #{inputByte},
+			output_byte = #{outputByte},
+			template = #{template},
+			name = #{name},
+			interface_type = #{interfaceType},
+			mac = #{mac},
+			input_rate = #{inputRate},
+			output_rate = #{outputRate}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM network_interface
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE network_interface SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="NetworkInterface" statementType="STATEMENT">
+		select * FROM network_interface  where ${propertyName} = '${value}'
+	</select>
+
+
+
+
+
+	<!--根据资源删除-->
+	<update id="delByResourceId">
+		DELETE FROM network_interface WHERE resource_id = #{id}
+	</update>
+
+	<insert id="saveList">
+		INSERT INTO network_interface(
+		id,
+		create_by,
+		create_date,
+		update_by,
+		update_date,
+		remarks,
+		del_flag,
+		sort,
+		resource_id,
+		capacity,
+		status,
+		abnormal_grade,
+		input_byte,
+		output_byte,
+		template,
+		name,
+		interface_type,
+		mac,
+		input_rate,
+		output_rate
+		)
+		<foreach collection="list" item="network" separator=" union all ">
+			SELECT 	#{network.id},
+			#{network.createBy.id},
+			#{network.createDate},
+			#{network.updateBy.id},
+			#{network.updateDate},
+			#{network.remarks},
+			#{network.delFlag},
+			#{network.sort},
+			#{network.resourceId},
+			#{network.capacity},
+			#{network.status},
+			#{network.abnormalGrade},
+			#{network.inputByte},
+			#{network.outputByte},
+			#{network.template},
+			#{network.name},
+			#{network.interfaceType},
+			#{network.mac},
+			#{network.inputRate},
+			#{network.outputRate} FROM dual
+		</foreach>
+
+
+	</insert>
+
+
+
+	<insert id="saveRateList">
+		INSERT INTO net_interface_in_out_rate(
+		create_date,
+		network_interface_id,
+		type,
+		rate
+		)
+		<foreach collection="list" item="network" separator=" union all ">
+			SELECT
+			#{network.createDate},
+			#{network.networkInterfaceId},
+			#{network.type},
+			#{network.rate} FROM dual
+		</foreach>
+	</insert>
+
+
+	<select id="findTopRate" resultType="NetInterfaceInOutRate" >
+		SELECT
+		a.create_date  AS "createDate",
+		a.network_interface_id AS "networkInterfaceId",
+		a.type AS "type",
+		a.rate AS "rate"
+		FROM net_interface_in_out_rate a
+		WHERE a.network_interface_id = #{networkInterfaceId} AND a.type = #{type} ORDER BY a.create_date DESC  limit 1
+	</select>
+
+
+	<select id="findRateList" resultType="NetInterfaceInOutRate" >
+		SELECT
+		a.create_date  AS "createDate",
+		a.network_interface_id AS "networkInterfaceId",
+		a.type AS "type",
+		a.rate AS "rate"
+		FROM net_interface_in_out_rate a
+		WHERE a.network_interface_id = #{networkInterfaceId} AND a.type = #{type} ORDER BY a.create_date ASC
+	</select>
+
+
+
+	<select id="findRateListByResourceIdType" resultType="NetInterfaceInOutRate" >
+		SELECT
+		 network_interface_id AS "networkInterfaceId",
+		 rate AS "rate"
+		FROM net_interface_in_out_rate
+		WHERE  type= #{type} and network_interface_id in (SELECT id from network_interface where resource_id = #{resourceId})
+		ORDER BY create_date desc LIMIT 0,${num}
+
+	</select>
+
+
+	<select id="getTopUsed" resultType="NetInterfaceInOutRate" >
+
+      SELECT
+		a.create_date  AS "createDate",
+		a.network_interface_id AS "networkInterfaceId",
+		n.name AS "networkInterface.name",
+		a.type AS "type",
+		a.rate AS "rate"
+		FROM net_interface_in_out_rate a
+        LEFT JOIN network_interface n ON n.id = a.network_interface_id
+		WHERE a.network_interface_id in (SELECT id from network_interface where resource_id =#{resourceId}) AND  (a.create_date BETWEEN #{beginDate} AND #{endDate}) ORDER BY 	a.rate DESC limit 1
+
+	</select>
+
+
+
+
+</mapper>

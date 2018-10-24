@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.indextemplate.mapper.IndexTemplateMapper">
+    
+	<sql id="indexTemplateColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.name AS "name",
+		a.resource_type_id AS "resourceType.id"
+	</sql>
+	
+	<sql id="indexTemplateJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="IndexTemplate" >
+		SELECT 
+			<include refid="indexTemplateColumns"/>
+		FROM index_template a
+		<include refid="indexTemplateJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="IndexTemplate" >
+		SELECT 
+			<include refid="indexTemplateColumns"/>
+		FROM index_template a
+		<include refid="indexTemplateJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+
+
+
+
+
+
+
+
+	<select id="list" resultType="IndexTemplate" >
+		SELECT
+		a.id AS "id",
+		a.name AS "name",
+		a.resource_type_id AS "resourceType.id"
+		FROM index_template a
+		WHERE a.del_flag = '0' AND a.resource_type_id = #{resourceTypeId} ORDER BY a.update_date DESC
+	</select>
+
+
+
+	<select id="indicatorListByIndexTemplateId" resultType="Indicator">
+		SELECT * FROM indicator a
+		WHERE a.id IN (SELECT indicator_id  FROM index_template_indicator WHERE index_template_id = #{indexTemplateId})
+	</select>
+
+
+
+	<select id="findAllList" resultType="IndexTemplate" >
+		SELECT 
+			<include refid="indexTemplateColumns"/>
+		FROM index_template a
+		<include refid="indexTemplateJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO index_template(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			name,
+			resource_type_id
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{name},
+			#{resourceType.id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE index_template SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			name = #{name},
+			resource_type_id = #{resourceType.id}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM index_template
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE index_template SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="IndexTemplate" statementType="STATEMENT">
+		select * FROM index_template  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

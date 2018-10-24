@@ -1,0 +1,688 @@
+.right-wide{
+    margin-right: 8px;
+}
+.perception-col{
+    border-width:0 !important;
+    padding-left:0 !important;
+    padding-right:0 !important;
+}
+.perception-box{
+    border-width:0 !important;
+}
+.operate-icon{
+    width:24px;
+    height:24px;
+    display: inline-block;
+}
+.index-table{
+    width:100%;
+    height:100%;
+    padding:0 14px;
+}
+.templates-content{
+    width:100%;
+    padding: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+.template-list{
+    width:220px;
+    height:180px;
+    border:1px solid #DBE4E2;
+    padding:8px;
+    position: relative;
+    margin:13px;
+}
+.template-title{
+    width:100%;
+    text-align: center;
+    margin-top:14px;
+}
+.template-img{
+    width:100%;
+    display: block;
+}
+.addContent {
+    width:100%;
+    height:100%;
+    background: rgba(54,70,96,0.88);
+    position: absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    opacity: 0;
+    transition: all 1s;
+}
+.addContent:hover{
+    opacity: 1;
+    cursor: pointer;
+}
+.addImg{
+    position: absolute;
+    top:50%;
+    left:50%;
+    margin-top:-18px;
+    margin-left:-18px;
+}
+.space-solid{
+    width:100%;
+    border-top:1px solid #ededed;
+    margin-bottom:8px;
+}
+.table-title{
+    padding:4px 0 8px;
+}
+.information-table{
+    border-bottom:1px solid #ededed;
+    border-top:1px solid #ededed;
+}
+.td-default{
+    background: #fafafa;
+}
+.information-table td{
+    border:none !important;
+}
+.edit{
+    margin-top:8px;
+}
+
+.uncalled-for-show{
+    display: none !important;
+}
+
+.resource-img-container{
+    width:100%;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content:space-between;
+}
+.resource-img-container a{
+    width:20%;
+    display: inline-block;
+    text-align: center;
+    padding:20px
+}
+.resource-img{
+    width:80%;
+}
+
+.search-container{
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+.search-title{
+    height: 34px;
+    line-height: 34px;
+}
+.search-list{
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    margin-bottom:14px;
+}
+.search-list .search-value{
+    flex: 6;
+    padding-right:8px;
+}
+.search-list .search-value input,select{
+    width:100%;
+}
+.search-value-select-list{
+    width:100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    height: 34px;
+    line-height: 34px;
+}
+.search-value-select-list span{
+    flex: 1;
+    text-align: center;
+    cursor: pointer;
+}
+.search-value-select-list .search-value-selected{
+    color:#00b83f;
+}
+
+.joggle-container{
+    width:100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    padding:14px 18px 0;
+    position: relative;
+    overflow: visible;
+}
+.joggle-list{
+    width:66px;
+    height:66px;
+    margin:0 14px;
+    vertical-align: middle;
+    text-align: center;
+}
+.joggle-information-container{
+    width:186px;
+    height: 126px;
+    position: absolute;
+    bottom:-120px;
+    left:50%;
+    margin-left:-83px;
+    background: rgba(0,0,0,0.8);
+    border-radius: 5px;
+    border:1px solid #ddd;
+    opacity: 0;
+    transition: all 0.6s;
+    z-index: 200;
+}
+.joggle-title{
+    line-height: 20px;
+    color: #fff;
+    padding: 0 6px;
+    width:100%;
+    font-size: 13px;
+    margin-top:8px;
+}
+.joggle-status-contact{
+    width:100%;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+}
+.joggle-status{
+    flex: 1;
+    width:60px;
+    line-height: 20px;
+    font-size: 13px;
+    margin:0;
+    color: #fff;
+}
+.joggle-status-text{
+    flex: 2;
+    line-height: 20px;
+    font-size: 13px;
+    margin:0;
+    color: #fff;
+    word-break: break-all;
+    text-align: left;
+    max-width: 110px;
+}
+.joggle-img{
+    width:90%;
+    height:auto;
+    margin:auto;
+}
+
+
+.informationClass,.configInfoClass,.physicInfoClass{
+    width:100%;
+    height:100%;
+    border-width:0;
+    background: rgba(255,255,255,0);
+}
+
+.editInset{
+    border-width:1px !important;
+}
+.tableEdit{
+    border:none;
+    background: #fff;
+    color: #666;
+}
+.tableSave{
+    border:none;
+    background: #fff;
+    color: #3CA2E0;
+}
+.tableCancel{
+    border:none;
+    background: #fff;
+    color: #E88E8B;
+}
+.tableSave:hover{
+    color: #428BCA;
+}
+.tableCancel:hover{
+    color:#E37671;
+}
+label{
+    padding-right:5px;
+}
+
+.btn-detail{
+    max-width: 66px;
+    background:rgba(0,0,0,0);
+    padding: 0px 6px;
+    display:inline-block;
+    font-size: 15px;
+    border-color: rgba(0,0,0,0);
+    border-radius: 3px;
+    color: #666;
+}
+
+
+/*网络适配器*/
+.network-adapter{
+    width:100%;
+    padding:14px 18px 0;
+
+}
+
+
+.CISCO2621-container{
+    width:100%;
+    background: #C6C7B7;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    position: relative;
+    overflow: visible;
+    padding:5px;
+    min-width: 1042px;
+    max-width: 1042px;
+}
+.CISCO2621-left{
+    flex: 2;
+    max-width:20%;
+    background: #4B4D48;
+    margin: 8px 5px;
+    border-radius: 3px;
+}
+.CISCO2621-mid{
+    flex: 3;
+    max-width:60%;
+    background: #C6C7B7;
+    margin: 8px 5px;
+}
+.CISCO2621-mid-contact{
+    width:100%;
+    display: flex;
+    justify-content: space-between;
+}
+.CISCO2621-mid-left{
+    flex:7;
+}
+.CISCO2621-mid-right{
+    flex:1;
+    background: #9D9F92;
+}
+
+.CISCO2621-mid-left-top{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.CISCO2621-mid-left-top div{
+    flex:1;
+    height:48px;
+    margin: 0 4px;
+    background: #4B4D48;
+}
+.CISCO2621-mid-left-bottom{
+    width: 100%;
+    padding:6px 0;
+    border-left:3px;
+    background: #9D9F92;
+    margin-top:3px;
+    display: flex;
+    justify-content: flex-start;
+}
+.CISCO2621-port{
+    padding-left:50px;
+}
+.port-list-top{
+    width: 100%;
+    overflow: hidden;
+}
+.CISCO2621-push-button{
+    display: inline-block;
+    margin:2px auto;
+    text-align: center;
+    float: left;
+}
+.push-button-title{
+    font-size: 11px;
+    color: #eee;
+    text-align: center;
+    padding:0 4px;
+    line-height: 16px;
+    margin:0;
+}
+.push-button{
+    height: 14px;
+    width: 18px;
+    background: #363636;
+    border-radius: 50%;
+    margin: 0 auto;
+    display: inline-block;
+}
+.CISCO2621-push-but{
+    width: 46px;
+    height: 46px;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #999;
+    background: #0c97e2;
+}
+.CISCO2621-port-list{
+    display: inline-block;
+    margin: 0 5px;
+}
+.port-list-bottom{
+    width:100%;
+    text-align: center;
+}
+.port-list-bottom span{
+    color: #fff;
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 8px;
+    background: #4B4D48;
+    font-size: 11px;
+    margin: 4px auto;
+}
+.CISCO2621-des{
+    width:100%;
+    padding:2px 0;
+}
+.CISCO2621-des-top{
+    width:100%;
+    transform:rotate(-90deg);
+    -ms-transform:rotate(-90deg); 	/* IE 9 */
+    -moz-transform:rotate(-90deg); 	/* Firefox */
+    -webkit-transform:rotate(-90deg); /* Safari 和 Chrome */
+    -o-transform:rotate(-90deg); 	/* Opera */
+}
+.CISCO2621-right{
+    width: 16%;
+    text-align: center;
+    vertical-align: middle;
+    border:1px solid #9C9E91;
+    margin: 8px 0px;
+}
+.CISCO2621-right img{
+    margin-top:30px;
+}
+
+
+
+.network-adapter-container{
+    width:100%;
+    background: #59748B;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    position: relative;
+    overflow: visible;
+    padding:5px;
+    min-width: 1042px;
+    max-width: 1042px;
+}
+.network-adapter-left{
+    width: 106px;
+    flex: 1;
+    min-width: 106px;
+    max-width: 108px;
+}
+.network-adapter-left-top{
+    width:100%;
+}
+.network-adapter-left-top p{
+    color: #fff;
+    font-size: 12px;
+    font-weight: bold;
+    margin:0;
+    padding:0;
+}
+.network-adapter-left-top img{
+    width: 80%;
+    margin: auto;
+}
+.push-button-container{
+    margin-top: 3px;
+}
+.push-button-container li{
+    line-height: 12px;
+    font-size: 10px;
+    padding:1px 0;
+    text-align: right;
+    color: #fff;
+}
+.push-button-container li .push-button{
+    height: 8px;
+    width: 14px;
+    background: #363636;
+    border-radius: 50%;
+    margin:0 5px;
+    display: inline-block;
+}
+.push-button-container li .push-button-mode{
+    height: 10px;
+    width: 16px;
+    background: #363636;
+    border-radius: 50%;
+    margin:0 18px 0 5px;
+    display: inline-block;
+}
+.network-adapter-mid{
+    flex: 10;
+    padding: 0px 8px;
+    min-width: 776px;
+    max-width: 776px;
+}
+.network-adapter-mid-contact{
+    margin-top:16px;
+    border: 1px solid #ababab;
+    overflow: hidden;
+    width:100%;
+    padding: 8px 8px;
+    border-radius: 5px;
+}
+.network-adapter-mid ul{
+    margin: 10px 4px;
+    overflow: hidden;
+    margin-bottom: 0;
+    float: left;
+}
+.network-adapter-mid ul:last-child{
+    margin-right: 0px;
+}
+.network-adapter-mid ul li{
+    float: left;
+    width:30px;
+    margin:0;
+}
+.network-adapter-mid-li-top{
+    width:100%;
+    margin: 0;
+    padding: 0;
+}
+.network-adapter-mid-li-top p{
+    width:100%;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    line-height: 20px;
+    font-size: 11px;
+    color: #fff;
+}
+.network-adapter-mid-li-top div{
+    width:100%;
+    margin: 0;
+    padding: 0;
+    border:1px solid #999;
+    background: #0c97e2;
+}
+.network-adapter-mid-li-top div:hover{
+    border:1px solid #99CC66;
+}
+.network-adapter-right{
+    flex: 1;
+    min-width: 136px;
+    max-width: 136px;
+}
+.network-adapter-right-title{
+    width:90%;
+    text-align: center;
+    line-height: 32px;
+    height:32px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    margin: auto;
+}
+.network-adapter-right-contact{
+    width:100%;
+    margin: auto;
+}
+.network-adapter-right-contact .interface-first{
+    width:60%;
+    margin:5px auto;
+    position: relative;
+}
+.interface-first-operation{
+    position: absolute;
+    top:-20px;
+    right:-5px;
+    display: none;
+    background: #adadad;
+    color: #fff;
+    width:34px;
+}
+.interface-first-operation p{
+    width:100%;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+}
+.network-adapter-right-contact .interface-first img:hover{
+    border:1px solid #99CC66;
+}
+
+.router-container{
+    width:100%;
+    overflow: hidden;
+}
+.router-container ul{
+    float: left;
+    margin:14px;
+    overflow: hidden;
+}
+.router-container ul li{
+    float: left;
+    margin:0px 14px;
+    width:34px;
+}
+.router-container ul li .router-container-li{
+    width:100%;
+}
+.router-container ul li .router-container-li img{
+    width:100%;
+}
+
+
+
+
+
+/*网络适配器*/
+
+.full-screen-topo{
+    height:32px;
+    line-height: 32px;
+    text-align: right;
+    padding:0 14px;
+}
+.edit-topo-btn{
+    padding:5px 8px !important;
+    font-size: 12px !important;
+}
+.edit-box{
+    padding:20px 14px;
+    background: #F2F5F5;
+    margin:8px 0;
+    width: 100%;
+}
+#topo-edit{
+    display: none;
+}
+
+.running-time{
+    height:32px;
+    line-height: 32px;
+    padding:0 14px;
+    font-size: 16px;
+    color: #343434;
+}
+.running-time span{
+    color: #99CC66;
+}
+
+/*单个指标一览编辑*/
+.top-indicator-contact{
+    width:100%;
+    min-height: 220px;
+}
+.top-indicator-title{
+    width:100%;
+    height:32px;
+    line-height: 32px;
+    padding:0 8px;
+    border-bottom: 1px solid #ddd;
+}
+.top-indicator-list{
+    width:100%;
+    height:96%;
+    overflow: auto;
+    padding:8px;
+}
+/*单个指标一览编辑*/
+
+#linkDiv{
+    width:100%;
+    padding:12px;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+.link-device{
+    width:100%;
+    padding:12px;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+.link-device-list{
+    width:126px;
+    margin: 0 6px;
+    text-align: center;
+    word-break: break-all;
+}
+.link-device-img{
+    width:120px;
+    min-height: 96px;
+    display: block;
+    margin-bottom: 6px;
+}
+.link-device-title{
+    width:100%;
+    padding:0 4px;
+    text-align: center;
+    line-height: 16px;
+    font-size: 12px;
+}
+
+#jstree{
+    padding:14px;
+}
+.tit{
+    min-width: 120px;
+}
+
+.threshold{
+    padding-left: 20px;
+    color: #adadad;
+    line-height: 24px;
+}

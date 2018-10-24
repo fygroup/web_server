@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.oa.mapper.OaTaskDisposeMapper">
+
+	<sql id="taskDisposeColumns">
+		a.id AS "id",
+		a.task_id AS "taskId",
+		u.name AS "name",
+		t.task_name AS "taskName",
+		a.join_id AS "user.id",
+		a.start_time AS "startTime",
+		a.end_time AS "endTime",
+		t.description AS "description",
+		a.is_flag AS "isFlag",
+		t.remark AS "remark",
+		a.order_time AS "orderTime"
+	</sql>
+
+	<sql id="taskDisposeJoins">
+		LEFT JOIN sys_user u ON u.id = a.join_id
+		LEFT JOIN oa_task t  ON t.id = a.task_id
+	</sql>
+
+	<select id="get" resultType="OaTaskDispose">
+		SELECT
+		<include refid="taskDisposeColumns"/>
+		FROM oa_task_dispose a
+		<include refid="taskDisposeJoins"/>
+		WHERE a.del_flag!=1 and a.id = #{id}
+		ORDER BY orderTime desc
+	</select>
+
+	<select id="findList" resultType="OaTaskDispose">
+		SELECT
+		<include refid="taskDisposeColumns"/>
+		FROM oa_task_dispose a
+		<include refid="taskDisposeJoins"/>
+		<where>
+			a.del_flag != 1
+			<if test="!currentUser.admin">
+			AND a.join_id = #{currentUser.id}
+		    </if>
+			<if test="taskName != null and taskName != ''">
+				AND t.task_name LIKE
+				<if test="dbName == 'mysql'">concat('%',#{taskName},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+		ORDER BY orderTime desc
+	</select>
+
+	<select id="findAllList" resultType="OaTaskDispose">
+		SELECT
+		<include refid="taskDisposeColumns"/>
+		FROM oa_task_dispose a
+		<include refid="taskDisposeJoins"/>
+		<where>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+
+	<insert id="insert">
+		INSERT INTO oa_task_dispose(
+		id,
+		task_id,
+		join_id,
+		is_flag,
+		del_flag,
+		order_time
+		) VALUES (
+		#{id},
+		#{taskId},
+		#{joinId},
+		#{isFlag},
+		#{delFlag},
+		#{orderTime}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE oa_task_dispose SET
+		task_id =#{taskId},
+		start_time = #{startTime},
+		end_time = #{endTime},
+		is_flag = #{isFlag},
+		remark = #{remark}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		DELETE FROM oa_task_dispose
+		WHERE id = #{id}
+	</update>
+
+	<select id="amountdispose" parameterType="string" resultType="Integer">
+		SELECT COUNT(IFNULL(a.is_flag,0))  as amount FROM oa_task_dispose a
+		where a.task_id=#{taskId} and a.del_flag!=1 and a.is_flag=0
+	</select>
+
+	<select id="amountfinish" parameterType="string" resultType="Integer">
+		SELECT COUNT(IFNULL(a.is_flag,0))  as amount FROM oa_task_dispose a
+		where a.task_id=#{taskId} and a.del_flag!=1 and a.is_flag=1
+	</select>
+
+
+</mapper>

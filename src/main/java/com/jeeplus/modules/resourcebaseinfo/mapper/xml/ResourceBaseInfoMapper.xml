@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.resourcebaseinfo.mapper.ResourceBaseInfoMapper">
+    
+	<sql id="resourceBaseInfoColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.port AS "port",
+		a.rdcommunity AS "rdcommunity",
+		a.delay AS "delay",
+		a.repeatnum AS "repeatnum",
+		a.user_name AS "userName",
+		a.security_leve AS "securityLeve",
+		a.authentication_protocol AS "authenticationProtocol",
+		a.authentication_password AS "authenticationPassword",
+		a.encryption_protocol AS "encryptionProtocol",
+		a.encryption_password AS "encryptionPassword",
+		a.access_config_type AS "accessConfigType",
+		a.access_config_port AS "accessConfigPort",
+		a.access_config_user_name  AS "accessConfigUserName",
+		a.access_config_password AS "accessConfigPassword",
+		a.privileged_mode_command AS "privilegedModeCommand",
+		a.privileged_mode_password AS "privilegedModePassword",
+		a.command_prompt AS "commandPrompt",
+		a.manager_type AS "managerType"
+	</sql>
+	
+	<sql id="resourceBaseInfoJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="ResourceBaseInfo" >
+		SELECT 
+			<include refid="resourceBaseInfoColumns"/>
+		FROM resource_base_info a
+		<include refid="resourceBaseInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ResourceBaseInfo" >
+		SELECT 
+			<include refid="resourceBaseInfoColumns"/>
+		FROM resource_base_info a
+		<include refid="resourceBaseInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ResourceBaseInfo" >
+		SELECT 
+			<include refid="resourceBaseInfoColumns"/>
+		FROM resource_base_info a
+		<include refid="resourceBaseInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO resource_base_info(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			port,
+			rdcommunity,
+			delay,
+			repeatnum,
+			user_name,
+			security_leve,
+			authentication_protocol,
+			authentication_password,
+			encryption_protocol,
+			encryption_password,
+			access_config_type,
+			access_config_port,
+			access_config_user_name ,
+			access_config_password,
+			privileged_mode_command,
+			privileged_mode_password,
+			command_prompt,
+			manager_type
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{port},
+			#{rdcommunity},
+			#{delay},
+			#{repeatnum},
+			#{userName},
+			#{securityLeve},
+			#{authenticationProtocol},
+			#{authenticationPassword},
+			#{encryptionProtocol},
+			#{encryptionPassword},
+			#{accessConfigType},
+			#{accessConfigPort},
+			#{accessConfigUserName},
+			#{accessConfigPassword},
+			#{privilegedModeCommand},
+			#{privilegedModePassword},
+			#{commandPrompt},
+			#{managerType}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE resource_base_info SET
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			port = #{port},
+			rdcommunity = #{rdcommunity},
+			delay = #{delay},
+			repeatnum = #{repeatnum},
+			user_name = #{userName},
+			security_leve = #{securityLeve},
+			authentication_protocol = #{authenticationProtocol},
+			authentication_password = #{authenticationPassword},
+			encryption_protocol = #{encryptionProtocol},
+			encryption_password = #{encryptionPassword},
+			access_config_type = #{accessConfigType},
+			access_config_port = #{accessConfigPort},
+			access_config_user_name  = #{accessConfigUserName},
+			access_config_password = #{accessConfigPassword},
+			privileged_mode_command = #{privilegedModeCommand},
+			privileged_mode_password = #{privilegedModePassword},
+			command_prompt = #{commandPrompt},
+			manager_type = #{managerType}
+		WHERE id = #{id}
+	</update>
+
+
+	<update id="updateResourceRdcommunity">
+		UPDATE resource_base_info SET
+		rdcommunity = #{rdcommunity}
+		WHERE id = #{id}
+	</update>
+
+
+
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM resource_base_info
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE resource_base_info SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="ResourceBaseInfo" statementType="STATEMENT">
+		select * FROM resource_base_info  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

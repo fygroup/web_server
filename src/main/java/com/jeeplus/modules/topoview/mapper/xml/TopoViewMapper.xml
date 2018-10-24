@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.topoview.mapper.TopoViewMapper">
+    
+	<sql id="topoViewColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.name AS "name",
+		a.descr AS "descr",
+		a.type AS "type",
+		a.user_id AS "user.id",
+		a.time_stamp AS "timeStamp",
+		a.is_instance AS "isInstance",
+		a.is_cache AS "isCache",
+		a.is_hidden AS "isHidden",
+		a.config AS "config",
+		a.options AS "options",
+		a.parent_view_id AS "parentViewId",
+		a.order_code AS "orderCode",
+		a.rel_symbol_id AS "relSymbolId"
+-- 		tl.name AS "topoLine.name",
+-- 		tl.path AS "topoLine.path",
+-- 		tl.type AS "topoLine.type",
+-- 		tl.src_symbol AS "topoLine.srcSymbol",
+-- 		tl.dst_symbol AS "topoLine.dstSymbol",
+-- 		tl.view_id AS "topoLine.view.id",
+-- 		tl.object_id AS "topoLine.objectId",
+-- 		tl.object_class AS "topoLine.objectClass",
+-- 		tl.instance_id AS "topoLine.instanceId",
+-- 		tl.options AS "topoLine.options",
+-- 		tl.url AS "topoLine.url",
+-- 		tl.alarm AS "topoLine.alarm",
+-- 		ts.name AS "topoSymbols.name",
+-- 		ts.x AS "topoSymbols.x",
+-- 		ts.y AS "topoSymbols.y",
+-- 		ts.type AS "topoSymbols.type",
+-- 		ts.timestamp AS "topoSymbols.timestamp",
+-- 		ts.view_id AS "topoSymbols.view.id",
+-- 		ts.parent_id AS "topoSymbols.parentId",
+-- 		ts.object_id AS "topoSymbols.objectId",
+-- 		ts.object_class AS "topoSymbols.objectClass",
+-- 		ts.options AS "topoSymbols.option",
+-- 		ts.url AS "topoSymbols.url",
+-- 		ts.alarm AS "topoSymbols.alarm",
+-- 		ts.style AS "topoSymbols.style"
+
+	</sql>
+	
+	<sql id="topoViewJoins">
+-- 		LEFT JOIN topo_line tl ON tl.view_id  = a.id
+-- 		LEFT JOIN topo_symbols ts ON ts.view_id  = a.id
+	</sql>
+	
+    
+	<select id="get" resultType="TopoView" >
+		SELECT 
+			<include refid="topoViewColumns"/>
+		FROM topo_view a
+		<include refid="topoViewJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TopoView" >
+		SELECT 
+			<include refid="topoViewColumns"/>
+		FROM topo_view a
+		<include refid="topoViewJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+
+			<if test="user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
+
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+
+
+
+
+	<select id="getTopoViewList" resultType="TopoView" >
+		SELECT
+		a.id AS "id",
+		a.name AS "name",
+		a.descr AS "descr",
+		a.type AS "type",
+		a.user_id AS "user.id",
+		a.time_stamp AS "timeStamp",
+		a.is_instance AS "isInstance",
+		a.is_cache AS "isCache",
+		a.is_hidden AS "isHidden",
+		a.config AS "config",
+		a.options AS "options",
+		a.parent_view_id AS "parentViewId",
+		a.order_code AS "orderCode",
+		a.rel_symbol_id AS "relSymbolId",
+		(select count(*) from resource_exception
+		LEFT JOIN resource_indicator_list rl ON rl.id = resource_indicator_list_id
+		where rl.resource_id IN (select object_id from topo_symbols where view_id = a.id) and confirm_status = '0') AS hasException
+
+		FROM topo_view a
+		<where>
+			a.del_flag = '0'
+			<if test="topoView.user.id != null and topoView.user.id != ''">
+				AND a.user_id = #{topoView.user.id}
+			</if>
+		</where>
+			ORDER BY a.create_date DESC
+	</select>
+
+	
+	<select id="findAllList" resultType="TopoView" >
+		SELECT 
+			<include refid="topoViewColumns"/>
+		FROM topo_view a
+		<include refid="topoViewJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="user.id != null and user.id != ''">
+				AND a.user_id = #{user.id}
+			</if>
+
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO topo_view(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			name,
+			descr,
+			type,
+			user_id,
+			time_stamp,
+			is_instance,
+			is_cache,
+			is_hidden,
+			config,
+			options,
+			parent_view_id,
+			order_code,
+			rel_symbol_id
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{name},
+			#{descr},
+			#{type},
+			#{user.id},
+			#{timeStamp},
+			#{isInstance},
+			#{isCache},
+			#{isHidden},
+			#{config},
+			#{options},
+			#{parentViewId},
+			#{orderCode},
+			#{relSymbolId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE topo_view SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			name = #{name},
+			descr = #{descr},
+			type = #{type},
+			user_id = #{user.id},
+			time_stamp = #{timeStamp},
+			is_instance = #{isInstance},
+			is_cache = #{isCache},
+			is_hidden = #{isHidden},
+			config = #{config},
+			options = #{options},
+			parent_view_id = #{parentViewId},
+			order_code = #{orderCode},
+			rel_symbol_id = #{relSymbolId}
+		WHERE id = #{id}
+	</update>
+
+	<update id="modifyTopoViewName">
+		UPDATE topo_view SET name = #{name} WHERE id = #{id}
+	</update>
+
+
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM topo_view
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE topo_view SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="TopoView" statementType="STATEMENT">
+		select * FROM topo_view  where ${propertyName} = '${value}'
+	</select>
+
+
+	<!--删除拓扑图-->
+	<delete id="deleteTopoLine">
+		DELETE FROM topo_line WHERE view_id = #{id}
+	</delete>
+
+	<!--删除拓扑图-->
+	<delete id="deleteTopoSymnols">
+		DELETE FROM topo_symbols WHERE view_id = #{id}
+	</delete>
+</mapper>

@@ -1,0 +1,507 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.resource.mapper.ResourceMapper">
+    
+	<sql id="resourceColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.name AS "name",
+		a.status AS "status",
+		a.resource_type AS "resourceType.id",
+		a.middleware_ip AS "middlewareIp",
+		a.database_ip AS "databaseIp",
+		a.img AS "img",
+		a.resource_base_info AS "resourceBaseInfo.id",
+		base_info.port AS "resourceBaseInfo.port",
+		base_info.rdcommunity AS "resourceBaseInfo.rdcommunity",
+		base_info.delay AS "resourceBaseInfo.delay",
+		base_info.repeatnum AS "resourceBaseInfo.repeatnum",
+		base_info.manager_type AS "resourceBaseInfo.managerType",
+		base_info.access_config_port AS "resourceBaseInfo.accessConfigPort",
+		base_info.access_config_user_name  AS "resourceBaseInfo.accessConfigUserName",
+		base_info.access_config_password AS "resourceBaseInfo.accessConfigPassword",
+		a.ip AS "ip",
+		a.mac AS "mac",
+		a.subnetmask AS "subnetmask",
+		a.description AS "description",
+		company.id AS "company.id",
+		company.name AS "company.name",
+		resourceType.name AS "resourceType.name",
+		resourceType.code AS "resourceType.code",
+		parentResourceType.code AS "resourceType.parent.code",
+		parentResourceType.name AS "resourceType.parent.name",
+		a.sys_oid AS "sysOid",
+		a.sys_name AS "sysName",
+		a.parent_id AS "parentId",
+		a.manufacturer AS "manufacturer.id",
+		manu.name AS "manufacturer.name",
+		manu.code AS "manufacturer.code",
+		a.model AS "model",
+		a.operating_system_id AS "operatingSystemId",
+		a.index_template_id AS "indexTemplate.id",
+		a.url AS "url",
+		a.application_level AS "applicationLevel",
+		a.collector_id AS "mokaCollector.id"
+
+	</sql>
+	
+	<sql id="resourceJoins">
+		LEFT JOIN resource_type resourceType ON resourceType.id = a.resource_type
+		LEFT JOIN resource_type parentResourceType ON parentResourceType.id = resourceType.parent_id
+		LEFT JOIN sys_office company ON company.id = a.company
+		LEFT JOIN resource_base_info base_info ON base_info.id = a.resource_base_info
+		LEFT JOIN manufacturer manu ON manu.id = a.manufacturer
+	</sql>
+	
+    
+	<select id="get" resultType="Resource" >
+		SELECT 
+			<include refid="resourceColumns"/>
+		FROM resource a
+		<include refid="resourceJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+
+	<select id="getByIpType" resultType="Resource" >
+		SELECT
+		<include refid="resourceColumns"/>
+		FROM resource a
+		<include refid="resourceJoins"/>
+		WHERE a.ip = #{ip} AND parentResourceType.code=#{code}
+	</select>
+
+
+	<select id="checkIp" resultType="Resource" >
+		SELECT * FROM resource  WHERE ip = #{ip} AND resource_type=#{resourceType}
+	</select>
+
+
+
+	<select id="checkMiddlewareIp" resultType="Resource" >
+		SELECT a.* FROM resource a LEFT JOIN resource_base_info base_info ON base_info.id = a.resource_base_info WHERE a.ip = #{ip} AND base_info.access_config_port=#{accessConfigPort}
+	</select>
+
+	
+	<select id="findList" resultType="Resource" >
+		SELECT 
+			<include refid="resourceColumns"/>
+		FROM resource a
+		<include refid="resourceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="name != null and name != ''">
+				AND a.name = #{name}
+			</if>
+
+			<if test="resourceType != null and resourceType.id != null and resourceType.id != '' ">
+				AND (a.resource_type = #{resourceType.id} OR a.resource_type IN (SELECT id from resource_type where parent_id = #{resourceType.id}))
+			</if>
+
+			<if test="resourceTypeCodeIds != null and resourceTypeCodeIds != '' ">
+				AND  a.resource_type NOT IN (SELECT id from resource_type where parent_id IN (SELECT id from resource_type where code IN (${resourceTypeCodeIds})))
+			</if>
+
+			<if test="selectResourceTypeCodeIds != null and selectResourceTypeCodeIds != '' ">
+				AND  a.resource_type IN (SELECT id from resource_type where parent_id IN (SELECT id from resource_type where code IN (${selectResourceTypeCodeIds})))
+			</if>
+
+
+			<if test="ip != null and ip != ''">
+				AND a.ip = #{ip}
+			</if>
+
+			<if test="parentId == null">
+				AND a.parent_id IS NULL
+			</if>
+
+			<if test="parentId != null and parentId != ''">
+				AND a.parent_id = #{parentId}
+			</if>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Resource" >
+		SELECT 
+			<include refid="resourceColumns"/>
+		FROM resource a
+		<include refid="resourceJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO resource(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			name,
+			status,
+			resource_type,
+			resource_base_info,
+			ip,
+			mac,
+			subnetmask,
+			company,
+			description,
+			sys_oid,
+			sys_name,
+			manufacturer,
+			model,
+			parent_id,
+			operating_system_id,
+			middleware_ip,
+			database_ip,
+			img,
+			index_template_id,
+			url,
+			application_level,
+			collector_id
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{name},
+			#{status},
+			#{resourceType.id},
+			#{resourceBaseInfo.id},
+			#{ip},
+			#{mac},
+			#{subnetmask},
+			#{company.id},
+			#{description},
+			#{sysOid},
+			#{sysName},
+			#{manufacturer.id},
+			#{model},
+			#{parentId},
+			#{operatingSystemId},
+			#{middlewareIp},
+			#{databaseIp},
+			#{img},
+			#{indexTemplate.id},
+			#{url},
+			#{applicationLevel},
+			#{mokaCollector.id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE resource SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			name = #{name},
+			status = #{status},
+			resource_type = #{resourceType.id},
+			resource_base_info = #{resourceBaseInfo.id},
+			ip = #{ip},
+			mac = #{mac},
+			subnetmask = #{subnetmask},
+			description = #{description},
+			sys_oid = #{sysOid},
+			company = #{company.id},
+			sys_name = #{sysName},
+			sys_name = #{sysName},
+			manufacturer = #{manufacturer.id},
+			parent_id = #{parentId},
+			operating_system_id = #{operatingSystemId},
+			middleware_ip = #{middlewareIp},
+			database_ip = #{databaseIp},
+			img  = #{img},
+			index_template_id  = #{indexTemplate.id},
+			url = #{url},
+			application_level = #{applicationLevel},
+			collector_id = #{mokaCollector.id}
+		WHERE id = #{id}
+	</update>
+
+
+	<update id="updateResourceName">
+		UPDATE resource SET
+		name = #{name}
+		WHERE id = #{id}
+	</update>
+
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM resource
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE resource SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+
+	<!--设置MAC-->
+	<update id="setMac">
+		UPDATE resource SET
+		mac = #{mac}
+		WHERE id = #{id}
+	</update>
+
+
+
+
+	<!--设置指标模板-->
+	<update id="setIndexTemplate">
+		UPDATE resource SET
+		index_template_id = #{indexTemplateId}
+		WHERE id = #{id}
+	</update>
+
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="Resource" statementType="STATEMENT">
+		select * FROM resource  where ${propertyName} = '${value}'
+	</select>
+
+
+	<select id="getResponseImg" resultType="String" >
+		SELECT img FROM resource WHERE id= #{resourceId}
+	</select>
+
+
+	<select id="getResourceImg" resultType="String" >
+		SELECT img FROM resource WHERE id= #{resourceId}
+	</select>
+
+	<update id="updateResourceImg">
+		UPDATE resource SET img = #{img} WHERE id = #{resourceId}
+	</update>
+
+
+	<select id="findResponseTimeList" resultType="ResponseTime" >
+		SELECT
+		a.create_date AS "createDate",
+		a.resource_id AS "resourceId",
+		a.time AS "time"
+		FROM response_time a
+		WHERE a.resource_id = #{resourceId}  ORDER BY a.create_date ASC
+	</select>
+
+
+	<!--ICMP响应时间-->
+	<insert id="saveResponseTime">
+		INSERT INTO response_time(
+		create_date,
+		resource_id,
+		time
+		) VALUES (
+		#{responseTime.createDate},
+		#{responseTime.resourceId},
+		#{responseTime.time}
+		)
+	</insert>
+
+
+	<select id="getTopResponseTime" resultType="ResponseTime" >
+		SELECT
+		a.create_date AS "createDate",
+		a.resource_id AS "resourceId",
+		a.time AS "time"
+		FROM response_time a
+		WHERE a.resource_id = #{resourceId}  ORDER BY a.create_date DESC  limit 1
+	</select>
+
+
+
+	<select id="getListByCode" resultType="Resource" >
+		SELECT
+		a.id AS "id",
+		a.name AS "name",
+		a.status AS "status",
+		a.resource_type AS "resourceType.id",
+		a.resource_base_info AS "resourceBaseInfo.id",
+		a.ip AS "ip",
+		a.mac AS "mac",
+		a.subnetmask AS "subnetmask",
+		a.description AS "description",
+		resourceType.name AS "resourceType.name",
+		resourceType.code AS "resourceType.code",
+		a.sys_oid AS "sysOid",
+		a.sys_name AS "sysName",
+		a.parent_id AS "parentId",
+		a.manufacturer AS "manufacturer.id",
+		a.model AS "model",
+		a.operating_system_id AS "operatingSystemId",
+		a.middleware_ip AS "middlewareIp",
+		database_ip AS "databaseIp",
+		a.collector_id AS "mokaCollector.id",
+		a.img AS "img"
+		FROM resource a
+			LEFT JOIN resource_type resourceType ON resourceType.id = a.resource_type
+		WHERE resourceType.code= #{code}
+	</select>
+
+
+	<select id="getCollectorList" resultType="MokaCollector" >
+		SELECT
+		a.id AS "id",
+		a.name AS "name",
+		a.status AS "status",
+		a.ipAddress AS "ipAddress"
+		FROM moka_collector a  order by a.createTime  desc
+	</select>
+
+
+	<select id="getCollector" resultType="MokaCollector" >
+		SELECT
+		a.id AS "id",
+		a.name AS "name",
+		a.status AS "status",
+		a.ipAddress AS "ipAddress"
+		FROM moka_collector a  where a.id = #{id}
+	</select>
+
+
+
+	<!--可用率-->
+	<insert id="saveAvailabilityRate">
+		INSERT INTO availability_rate(
+		create_date,
+		resource_id,
+		availability_rate
+		) VALUES (
+		#{availabilityRate.createDate},
+		#{availabilityRate.resourceId},
+		#{availabilityRate.availabilityRate}
+		)
+	</insert>
+
+
+
+
+	<select id="getTopAvailabilityRate" resultType="AvailabilityRate" >
+		SELECT
+		a.create_date AS "createDate",
+		a.resource_id AS "resourceId",
+		a.availability_rate AS "availabilityRate"
+		FROM availability_rate a
+		WHERE a.resource_id = #{resourceId}  ORDER BY a.create_date DESC  limit 1
+	</select>
+
+
+
+
+	<select id="findAvailabilityRateList" resultType="AvailabilityRate" >
+		SELECT
+		a.create_date AS "createDate",
+		a.resource_id AS "resourceId",
+		a.availability_rate AS "availabilityRate"
+		FROM availability_rate a
+		WHERE a.resource_id = #{resourceId}  ORDER BY a.create_date ASC
+	</select>
+
+
+
+	<select id="findAvailabilityRateListDate" resultType="AvailabilityRate" >
+		SELECT
+		a.create_date AS "createDate",
+		a.resource_id AS "resourceId",
+		a.availability_rate AS "availabilityRate"
+		FROM availability_rate a
+		WHERE a.resource_id = #{resourceId}   AND  (a.create_date BETWEEN #{beginDate} AND #{endDate})  ORDER BY a.create_date ASC
+	</select>
+
+
+	<select id="findAvailabilityRateListDateTotal" resultType="String" >
+		SELECT
+		SUM(a.availability_rate )
+		FROM availability_rate a
+		WHERE a.resource_id = #{resourceId}   AND  (a.create_date BETWEEN #{beginDate} AND #{endDate})  ORDER BY a.create_date DESC
+	</select>
+
+	<!--健康度-->
+	<insert id="saveHealthDegree">
+		INSERT INTO health_degree(
+		create_date,
+		resource_id,
+		health_degree
+		) VALUES (
+		#{healthDegree.createDate},
+		#{healthDegree.resourceId},
+		#{healthDegree.healthDegree}
+		)
+	</insert>
+
+
+
+	<select id="getTopHealthDegree" resultType="HealthDegree" >
+		SELECT
+		a.create_date AS "createDate",
+		a.resource_id AS "resourceId",
+		a.health_degree AS "healthDegree"
+		FROM health_degree a
+		WHERE a.resource_id = #{resourceId}  ORDER BY a.create_date DESC  limit 1
+	</select>
+
+
+
+	<select id="findHealthDegreeList" resultType="HealthDegree" >
+		SELECT
+		a.create_date AS "createDate",
+		a.resource_id AS "resourceId",
+		a.health_degree AS "healthDegree"
+		FROM health_degree a
+		WHERE a.resource_id = #{resourceId}  ORDER BY a.create_date ASC
+	</select>
+
+
+	<select id="findHealthDegreeListDate" resultType="HealthDegree" >
+		SELECT
+		a.create_date AS "createDate",
+		a.resource_id AS "resourceId",
+		a.health_degree AS "healthDegree"
+		FROM health_degree a
+		WHERE a.resource_id = #{resourceId} AND  (a.create_date BETWEEN #{beginDate} AND #{endDate})  ORDER BY a.create_date ASC
+	</select>
+
+
+	<select id="findHealthDegreeListDateTotal" resultType="String" >
+		SELECT
+		SUM(a.health_degree )
+		FROM health_degree a
+		WHERE a.resource_id = #{resourceId} AND  (a.create_date BETWEEN #{beginDate} AND #{endDate})  ORDER BY a.create_date DESC
+	</select>
+
+
+</mapper>

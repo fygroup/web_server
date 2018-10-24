@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.resourceconfiginfo.mapper.ResourceConfigInfoMapper">
+    
+	<sql id="resourceConfigInfoColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.cpu_num AS "cpuNum",
+		a.single_cpu_type AS "singleCpuType",
+		a.single_cpu_rate AS "singleCpuRate",
+		a.single_cpu_corenum AS "singleCpuCorenum",
+		a.memory AS "memory",
+		a.memory_num AS "memoryNum",
+		a.memory_capacity AS "memorycCapacity",
+		a.disk_num AS "diskNum",
+		a.disk_capacity AS "diskCapacity",
+		a.disk_type AS "diskType",
+		a.single_disk_capacity AS "singleDiskCapacity",
+		a.disk_available_capacity AS "diskAvailableCapacity",
+		a.disk_if_raid AS "diskIfRaid",
+		a.netcard_num AS "netcardNum",
+		a.resource_id AS "resourceId",
+		a.u_num AS "UNum",
+		a.controller_num AS "controllerNum",
+		a.elepower_module_num AS "elepowerModuleNum",
+		a.single_powermodule_power AS "singlePowermodulePower",
+		a.used_interface_num AS "usedInterfaceNum",
+		a.avaliable_interface_num  AS "avaliableInterfaceNum",
+		a.special_board_num AS "specialBoardNum",
+		a.special_board_type AS "specialBoardType",
+		a.elepower_module_power AS "elepowerModulePower"
+	</sql>
+	
+	<sql id="resourceConfigInfoJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="ResourceConfigInfo" >
+		SELECT 
+			<include refid="resourceConfigInfoColumns"/>
+		FROM resource_config_info a
+		<include refid="resourceConfigInfoJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+
+
+	<select id="getByResourceId" resultType="ResourceConfigInfo" >
+		SELECT
+		<include refid="resourceConfigInfoColumns"/>
+		FROM resource_config_info a
+		WHERE a.resource_id = #{resourceId}
+	</select>
+
+	
+	<select id="findList" resultType="ResourceConfigInfo" >
+		SELECT 
+			<include refid="resourceConfigInfoColumns"/>
+		FROM resource_config_info a
+		<include refid="resourceConfigInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="resourceId != null and resourceId != ''">
+				AND a.resource_id = #{resourceId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ResourceConfigInfo" >
+		SELECT 
+			<include refid="resourceConfigInfoColumns"/>
+		FROM resource_config_info a
+		<include refid="resourceConfigInfoJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO resource_config_info(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			cpu_num,
+			single_cpu_type,
+			single_cpu_rate,
+			single_cpu_corenum,
+			memory,
+			memory_num,
+			memory_capacity,
+			disk_num,
+			disk_capacity,
+			disk_type,
+			single_disk_capacity,
+			disk_available_capacity,
+			disk_if_raid,
+			netcard_num,
+			resource_id,
+			u_num,
+			controller_num,
+			elepower_module_num,
+			single_powermodule_power,
+			used_interface_num,
+			avaliable_interface_num ,
+			special_board_num,
+			special_board_type,
+			elepower_module_power
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{cpuNum},
+			#{singleCpuType},
+			#{singleCpuRate},
+			#{singleCpuCorenum},
+			#{memory},
+			#{memoryNum},
+			#{memorycCapacity},
+			#{diskNum},
+			#{diskCapacity},
+			#{diskType},
+			#{singleDiskCapacity},
+			#{diskAvailableCapacity},
+			#{diskIfRaid},
+			#{netcardNum},
+			#{resourceId},
+			#{UNum},
+			#{controllerNum},
+			#{elepowerModuleNum},
+			#{singlePowermodulePower},
+			#{usedInterfaceNum},
+			#{avaliableInterfaceNum},
+			#{specialBoardNum},
+			#{specialBoardType},
+			#{elepowerModulePower}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE resource_config_info SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			cpu_num = #{cpuNum},
+			single_cpu_type = #{singleCpuType},
+			single_cpu_rate = #{singleCpuRate},
+			single_cpu_corenum = #{singleCpuCorenum},
+			memory = #{memory},
+			memory_num = #{memoryNum},
+			memory_capacity = #{memorycCapacity},
+			disk_num = #{diskNum},
+			disk_capacity = #{diskCapacity},
+			disk_type = #{diskType},
+			single_disk_capacity = #{singleDiskCapacity},
+			disk_available_capacity = #{diskAvailableCapacity},
+			disk_if_raid = #{diskIfRaid},
+			netcard_num = #{netcardNum},
+			resource_id = #{resourceId},
+			u_num = #{UNum},
+			controller_num = #{controllerNum},
+			elepower_module_num = #{elepowerModuleNum},
+			single_powermodule_power = #{singlePowermodulePower},
+			used_interface_num = #{usedInterfaceNum},
+			avaliable_interface_num  = #{avaliableInterfaceNum},
+			special_board_num = #{specialBoardNum},
+			special_board_type = #{specialBoardType},
+			elepower_module_power = #{elepowerModulePower}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM resource_config_info
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE resource_config_info SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="ResourceConfigInfo" statementType="STATEMENT">
+		select * FROM resource_config_info  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

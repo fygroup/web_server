@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.process.mapper.ProcessMapper">
+    
+	<sql id="processColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.resource_id AS "resourceId",
+		a.name AS "name",
+		a.path AS "path",
+		a.cpu_used_percent AS "cpuUsedPercent",
+		a.pid AS "pid",
+		a.init_parameter AS "initParameter",
+		a.memory AS "memory"
+	</sql>
+	
+	<sql id="processJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="Process" >
+		SELECT 
+			<include refid="processColumns"/>
+		FROM process a
+		<include refid="processJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Process" >
+		SELECT 
+			<include refid="processColumns"/>
+		FROM process a
+		<include refid="processJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="resourceId != null and resourceId != ''">
+				AND a.resource_id = #{resourceId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Process" >
+		SELECT 
+			<include refid="processColumns"/>
+		FROM process a
+		<include refid="processJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="resourceId != null and resourceId != ''">
+				AND a.resource_id = #{resourceId}
+			</if>
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO process(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			resource_id,
+			name,
+			path,
+			cpu_used_percent,
+			pid,
+			init_parameter,
+			memory
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{resourceId},
+			#{name},
+			#{path},
+			#{cpuUsedPercent},
+			#{pid},
+			#{initParameter},
+			#{memory}
+		)
+	</insert>
+
+
+	<!--根据资源删除-->
+	<update id="delByResourceId">
+		DELETE FROM process WHERE resource_id = #{id}
+	</update>
+
+
+	<insert id="saveList">
+		INSERT INTO process(
+		id,
+		create_by,
+		create_date,
+		update_by,
+		update_date,
+		remarks,
+		del_flag,
+		resource_id,
+		name,
+		path,
+		cpu_used_percent,
+		pid,
+		init_parameter,
+		memory
+		)
+		<foreach collection="list" item="process" separator=" union all ">
+			SELECT #{process.id},
+			#{process.createBy.id},
+			#{process.createDate},
+			#{process.updateBy.id},
+			#{process.updateDate},
+			#{process.remarks},
+			#{process.delFlag},
+			#{process.resourceId},
+			#{process.name},
+			#{process.path},
+			#{process.cpuUsedPercent},
+			#{process.pid},
+			#{process.initParameter},
+			#{process.memory} FROM dual
+		</foreach>
+
+
+	</insert>
+
+	
+	<update id="update">
+		UPDATE process SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			resource_id = #{resourceId},
+			name = #{name},
+			path = #{path},
+			cpu_used_percent = #{cpuUsedPercent},
+			pid = #{pid},
+			init_parameter = #{initParameter},
+			memory = #{memory}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM process
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE process SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="Process" statementType="STATEMENT">
+		select * FROM process  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

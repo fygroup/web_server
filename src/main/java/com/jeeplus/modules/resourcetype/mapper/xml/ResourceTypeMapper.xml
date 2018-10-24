@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.resourcetype.mapper.ResourceTypeMapper">
+
+    <resultMap id="resourceTypeResult" type="ResourceType">
+   		<result property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="sort" column="sort" />
+		<result property="parentIds" column="parentIds" />
+		<result property="img" column="img" />
+		<association property="hasChildren" column="id" select="hasChildren" />
+    </resultMap>
+    
+	<sql id="resourceTypeColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.parent_id AS "parent.id",
+		parent.code AS "parent.code",
+		a.parent_ids AS "parentIds",
+		a.name AS "name",
+		a.sort AS "sort",
+		a.img AS "img",
+		a.code AS "code"
+	</sql>
+	
+
+	
+
+	<sql id="resourceTypeJoins">
+		LEFT JOIN resource_type parent ON parent.id = a.parent_id
+	</sql>
+	
+
+    
+	<select id="get" resultType="ResourceType">
+		SELECT 
+			<include refid="resourceTypeColumns"/>
+		FROM resource_type a
+		<include refid="resourceTypeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+
+
+	<select id="getParentByChild" resultType="ResourceType">
+		SELECT
+		<include refid="resourceTypeColumns"/>
+		FROM resource_type a
+		<include refid="resourceTypeJoins"/>
+		WHERE a.id = ( SELECT parent_id FROM resource_type WHERE id = #{childId})
+	</select>
+
+
+	<select id="getChildsByCode" resultType="ResourceType">
+		SELECT
+		<include refid="resourceTypeColumns"/>
+		FROM resource_type a
+		<include refid="resourceTypeJoins"/>
+		WHERE a.parent_id = ( SELECT id FROM resource_type WHERE code = #{code})
+	</select>
+
+
+	<select id="getAllChilds" resultType="ResourceType">
+		SELECT
+		<include refid="resourceTypeColumns"/>
+		FROM resource_type a
+		<include refid="resourceTypeJoins"/>
+		WHERE a.parent_id != '0'
+	</select>
+
+
+
+	<select id="getByCode" resultType="ResourceType">
+		SELECT
+		<include refid="resourceTypeColumns"/>
+		FROM resource_type a
+		<include refid="resourceTypeJoins"/>
+		WHERE a.code = #{code}
+	</select>
+
+
+
+	<select id="numStatistics" resultType="ResponseTypeNumStatistics">
+        SELECT
+		count(*) AS num,
+        parentResourceType.id AS "resourceType.id",
+        parentResourceType.code AS "resourceType.code",
+        parentResourceType.name AS "resourceType.name"
+		FROM resource a
+		LEFT JOIN resource_type resourceType ON resourceType.id = a.resource_type
+		LEFT JOIN resource_type parentResourceType ON parentResourceType.id = resourceType.parent_id
+        group by  parentResourceType.code
+	</select>
+
+
+
+	<select id="findList" resultType="ResourceType">
+		SELECT 
+			<include refid="resourceTypeColumns"/>
+		FROM resource_type a
+		 LEFT JOIN resource_type parent ON parent.id = a.parent_id
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="parent != null and parent.id != null and parent.id != ''">
+				AND a.parent_id = #{parent.id}
+			</if>
+			<if test="parentIds != null and parentIds != ''">
+				AND a.parent_ids LIKE 
+					<if test="dbName == 'oracle'">'%'||#{parentIds}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{parentIds}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{parentIds},'%')</if>
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		ORDER BY a.sort ASC
+	</select>
+
+
+
+	<select id="findListByCode" resultType="ResourceType">
+		SELECT
+		a.id AS "id",
+		a.parent_id AS "parent.id",
+		pp.code AS "parent.code",
+		a.parent_ids AS "parentIds",
+		a.name AS "name",
+		a.sort AS "sort",
+		a.img AS "img",
+		a.code AS "code"
+		FROM resource_type a
+		LEFT JOIN resource_type pp ON pp.id = a.parent_id
+		WHERE  a.del_flag = '0' AND (a.code = #{code} OR pp.code = #{code}) ORDER BY a.sort ASC
+	</select>
+
+
+	<select id="findParentListByCode" resultType="ResourceType">
+		SELECT
+		a.id AS "id",
+		a.parent_id AS "parent.id",
+		pp.code AS "parent.code",
+		a.parent_ids AS "parentIds",
+		a.name AS "name",
+		a.sort AS "sort",
+		a.img AS "img",
+		a.code AS "code"
+		FROM resource_type a
+		LEFT JOIN resource_type pp ON pp.id = a.parent_id
+		WHERE  a.del_flag = '0' AND a.parent_id = '0' AND a.code = #{code}  ORDER BY a.sort ASC
+	</select>
+
+
+
+	<select id="findAllList" resultType="ResourceType">
+		SELECT 
+			<include refid="resourceTypeColumns"/>
+		FROM resource_type a
+		<include refid="resourceTypeJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>
+		ORDER BY a.sort ASC
+	</select>
+	
+	<select id="getChildren" parameterType="String" resultMap="resourceTypeResult">  
+        select * from resource_type where parent_id = #{id} ORDER BY sort 
+    </select>
+
+	<select id="getChildrenOfSelect" parameterType="String" resultMap="resourceTypeResult">
+		select * from resource_type where parent_id = #{id} AND code NOT IN (4,6,7) ORDER BY sort
+	</select>
+
+    <select id="hasChildren" parameterType="String" resultType="Boolean">
+        select case when exists(select 1 from resource_type where parent_id = #{id}) then 1 else 0 end from dual
+    </select>
+    
+	<select id="findByParentIdsLike" resultType="ResourceType">
+		SELECT
+			a.id,
+			a.parent_id AS "parent.id",
+			a.parent_ids
+		FROM resource_type a
+		<include refid="resourceTypeJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.parent_ids LIKE #{parentIds}
+		</where>
+		ORDER BY a.sort ASC
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO resource_type(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			parent_id,
+			parent_ids,
+			name,
+			sort,
+			img,
+			code
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{parent.id},
+			#{parentIds},
+			#{name},
+			#{sort},
+			#{img},
+			#{code}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE resource_type SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			parent_id = #{parent.id},
+			parent_ids = #{parentIds},
+			name = #{name},
+			sort = #{sort},
+			img = #{img},
+			code = #{code}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateParentIds">
+		UPDATE resource_type SET 
+			parent_id = #{parent.id}, 
+			parent_ids = #{parentIds}
+		WHERE id = #{id}
+	</update>
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM resource_type
+		WHERE id = #{id} OR parent_ids LIKE 
+		<if test="dbName == 'oracle'">'%,'||#{id}||',%'</if>
+		<if test="dbName == 'mssql'">'%,'+#{id}+',%'</if>
+        <if test="dbName == 'mysql'">CONCAT('%,', #{id}, ',%')</if>
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE resource_type SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id} OR parent_ids LIKE 
+		<if test="dbName == 'oracle'">'%,'||#{id}||',%'</if>
+		<if test="dbName == 'mssql'">'%,'+#{id}+',%'</if>
+        <if test="dbName == 'mysql'">CONCAT('%,', #{id}, ',%')</if>
+	</update>
+	
+</mapper>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.violations.mapper.ViolationsMapper">
+    
+	<sql id="violationsColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.resource_id AS "resourceId",
+		a.sort AS "sort",
+		a.name AS "name",
+		a.value AS "value"
+	</sql>
+	
+	<sql id="violationsJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="Violations" >
+		SELECT 
+			<include refid="violationsColumns"/>
+		FROM violations a
+		<include refid="violationsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getWithResourceId" resultType="Violations" >
+		SELECT
+			<include refid="violationsColumns"/>
+		FROM violations a
+		<include refid="violationsJoins"/>
+		WHERE a.resource_id = #{resourceId}
+	</select>
+	
+	<select id="findList" resultType="Violations" >
+		SELECT 
+			<include refid="violationsColumns"/>
+		FROM violations a
+		<include refid="violationsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="resourceId != null and resourceId != ''">
+				AND a.resource_id = #{resourceId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.sort ASC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="Violations" >
+		SELECT 
+			<include refid="violationsColumns"/>
+		FROM violations a
+		<include refid="violationsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.sort ASC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="getTopViolations" resultType="Violations" >
+		SELECT
+		a.create_date AS "createDate",
+		a.resource_id AS "resourceId",
+		a.value AS "value",
+		a.id AS "id"
+		FROM violations a
+		WHERE a.resource_id = #{resourceId}  ORDER BY a.create_date DESC  limit 1
+	</select>
+
+
+
+
+</mapper>

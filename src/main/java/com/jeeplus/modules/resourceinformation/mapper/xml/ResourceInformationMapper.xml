@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.resourceinformation.mapper.ResourceInformationMapper">
+    
+	<sql id="resourceInformationColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.resource_id AS "resourceId",
+		a.equipment_category AS "equipmentCategory",
+		a.equipment_type AS "equipmentType",
+		a.sys_url AS "sysUrl",
+		a.ops_firm AS "opsFirm",
+		a.ops_person AS "opsPerson",
+		a.ops_contact AS "opsContact",
+		a.equipment_supplier AS "equipmentSupplier",
+		a.purchase_sum AS "purchaseSum",
+		a.added_date AS "addedDate",
+		a.maintenance_period AS "maintenancePeriod",
+		a.court_id AS "courtId",
+		a.priority AS "priority",
+		a.server AS "server",
+		a.db_port AS "dbPort",
+		a.db_edition AS "dbEdition",
+		a.os AS "os",
+		a.os_edition AS "osEdition"
+	</sql>
+	
+	<sql id="resourceInformationJoins">
+		
+	</sql>
+
+
+	<select id="getByResourceId" resultType="ResourceInformation" >
+		SELECT
+		<include refid="resourceInformationColumns"/>
+		FROM resource_information a
+		WHERE a.resource_id = #{resourceId}
+	</select>
+
+
+	<select id="get" resultType="ResourceInformation" >
+		SELECT 
+			<include refid="resourceInformationColumns"/>
+		FROM resource_information a
+		<include refid="resourceInformationJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ResourceInformation" >
+		SELECT 
+			<include refid="resourceInformationColumns"/>
+		FROM resource_information a
+		<include refid="resourceInformationJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="resourceId != null and resourceId != ''">
+				AND a.resource_id = #{resourceId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ResourceInformation" >
+		SELECT 
+			<include refid="resourceInformationColumns"/>
+		FROM resource_information a
+		<include refid="resourceInformationJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO resource_information(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			resource_id,
+			equipment_category,
+			equipment_type,
+			sys_url,
+			ops_firm,
+			ops_person,
+			ops_contact,
+			equipment_supplier,
+			purchase_sum,
+			added_date,
+			maintenance_period,
+			court_id,
+			priority,
+			server,
+			db_port,
+			db_edition,
+			os,
+			os_edition
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{resourceId},
+			#{equipmentCategory},
+			#{equipmentType},
+			#{sysUrl},
+			#{opsFirm},
+			#{opsPerson},
+			#{opsContact},
+			#{equipmentSupplier},
+			#{purchaseSum},
+			#{addedDate},
+			#{maintenancePeriod},
+			#{courtId},
+			#{priority},
+			#{server},
+			#{dbPort},
+			#{dbEdition},
+			#{os},
+			#{osEdition}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE resource_information SET
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			resource_id = #{resourceId},
+			equipment_category = #{equipmentCategory},
+			equipment_type = #{equipmentType},
+			sys_url = #{sysUrl},
+			ops_firm = #{opsFirm},
+			ops_person = #{opsPerson},
+			ops_contact = #{opsContact},
+			equipment_supplier = #{equipmentSupplier},
+			purchase_sum = #{purchaseSum},
+			added_date = #{addedDate},
+			maintenance_period = #{maintenancePeriod},
+			court_id = #{courtId},
+			priority = #{priority},
+			server = #{server},
+			db_port = #{dbPort},
+			db_edition = #{dbEdition},
+			os = #{os},
+			os_edition = #{osEdition}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM resource_information
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE resource_information SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="ResourceInformation" statementType="STATEMENT">
+		select * FROM resource_information  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

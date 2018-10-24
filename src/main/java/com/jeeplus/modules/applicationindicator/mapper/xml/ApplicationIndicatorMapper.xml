@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.applicationindicator.mapper.ApplicationIndicatorMapper">
+
+    <sql id="applicationIndicatorColumns">
+        a.id AS "id",
+        a.create_by AS "createBy.id",
+        a.create_date AS "createDate",
+        a.update_by AS "updateBy.id",
+        a.update_date AS "updateDate",
+        a.remarks AS "remarks",
+        a.del_flag AS "delFlag",
+        a.resource_id AS "resource.id",
+        a.indicator_name AS "indicatorName",
+        a.type AS "type",
+        a.unit AS "unit",
+        a.url AS "url"
+    </sql>
+
+    <sql id="applicationIndicatorJoins">
+
+    </sql>
+
+
+    <select id="get" resultType="ApplicationIndicator">
+        SELECT
+        <include refid="applicationIndicatorColumns"/>
+        FROM application_indicator a
+        <include refid="applicationIndicatorJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="ApplicationIndicator">
+        SELECT
+        <include refid="applicationIndicatorColumns"/>
+        FROM application_indicator a
+        <include refid="applicationIndicatorJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            ${dataScope}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+
+    <select id="findListByResource" resultType="ApplicationIndicator">
+        SELECT
+        <include refid="applicationIndicatorColumns"/>
+        FROM application_indicator a
+        <include refid="applicationIndicatorJoins"/>
+        WHERE a.resource_id = #{resourceId} ORDER BY a.type ASC
+    </select>
+
+
+    <select id="findAllList" resultType="ApplicationIndicator">
+        SELECT
+        <include refid="applicationIndicatorColumns"/>
+        FROM application_indicator a
+        <include refid="applicationIndicatorJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            ${dataScope}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+        INSERT INTO application_indicator(
+        id,
+        create_by,
+        create_date,
+        update_by,
+        update_date,
+        remarks,
+        del_flag,
+        resource_id,
+        indicator_name,
+        type,
+        unit,
+        url
+        ) VALUES (
+        #{id},
+        #{createBy.id},
+        #{createDate},
+        #{updateBy.id},
+        #{updateDate},
+        #{remarks},
+        #{delFlag},
+        #{resource.id},
+        #{indicatorName},
+        #{type},
+        #{unit},
+        #{url}
+        )
+    </insert>
+
+
+    <!--批量插入-->
+    <insert id="saveList">
+        INSERT INTO application_indicator(
+        id,
+        create_by,
+        create_date,
+        update_by,
+        update_date,
+        remarks,
+        del_flag,
+        resource_id,
+        indicator_name,
+        type,
+        unit,
+        url
+        )
+        <foreach collection="list" item="item" separator=" union all ">
+            SELECT #{item.id},
+            #{item.createBy.id},
+            #{item.createDate},
+            #{item.updateBy.id},
+            #{item.updateDate},
+            #{item.remarks},
+            #{item.delFlag},
+            #{item.resource.id},
+            #{item.indicatorName},
+            #{item.type},
+            #{item.unit},
+            #{item.url} FROM dual
+        </foreach>
+    </insert>
+
+
+    <!--批量插入指标值-->
+    <insert id="saveValueList">
+        INSERT INTO application_indicator_value(
+        create_date,
+        application_indicator_id,
+        value
+        )
+        <foreach collection="list" item="item" separator=" union all ">
+            SELECT
+            #{item.createDate},
+            #{item.applicationIndicator.id},
+            #{item.value} FROM dual
+        </foreach>
+    </insert>
+
+
+    <select id="getTopValue" resultType="ApplicationIndicatorValue">
+        SELECT
+        a.create_date AS "createDate",
+        value AS "value"
+        FROM application_indicator_value a
+        WHERE a.application_indicator_id = #{id} ORDER BY a.create_date DESC limit 1
+    </select>
+
+
+    <update id="update">
+        UPDATE application_indicator SET
+        update_by = #{updateBy.id},
+        update_date = #{updateDate},
+        remarks = #{remarks},
+        resource_id = #{resource.id},
+        indicator_name = #{indicatorName},
+        type = #{type},
+        unit = #{unit},
+        url = #{url}
+        WHERE id = #{id}
+    </update>
+
+
+    <!--物理删除-->
+    <update id="delete">
+        DELETE FROM application_indicator
+        WHERE id = #{id}
+    </update>
+
+    <!--逻辑删除-->
+    <update id="deleteByLogic">
+        UPDATE application_indicator SET
+        del_flag = #{DEL_FLAG_DELETE}
+        WHERE id = #{id}
+    </update>
+
+
+    <!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+    <select id="findUniqueByProperty" resultType="ApplicationIndicator" statementType="STATEMENT">
+        select * FROM application_indicator where ${propertyName} = '${value}'
+    </select>
+
+</mapper>

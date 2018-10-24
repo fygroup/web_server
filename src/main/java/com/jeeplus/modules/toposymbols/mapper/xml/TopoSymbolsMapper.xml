@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.toposymbols.mapper.TopoSymbolsMapper">
+    
+	<sql id="topoSymbolsColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.name AS "name",
+		a.x AS "x",
+		a.y AS "y",
+		a.type AS "type",
+		a.timestamp AS "timestamp",
+		a.view_id AS "view.id",
+		a.parent_id AS "parentId",
+		a.object_id AS "objectId",
+		a.object_class AS "objectClass",
+		a.options AS "option",
+		a.url AS "url",
+		a.alarm AS "alarm",
+		a.style AS "style"
+	</sql>
+	
+	<sql id="topoSymbolsJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="TopoSymbols" >
+		SELECT 
+			<include refid="topoSymbolsColumns"/>
+		FROM topo_symbols a
+		<include refid="topoSymbolsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="TopoSymbols" >
+		SELECT 
+			<include refid="topoSymbolsColumns"/>
+		FROM topo_symbols a
+		<include refid="topoSymbolsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="view != null and view.id != null and view.id != ''">
+				and a.view_id = #{view.id}
+			</if>
+			${dataScope}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="getList" resultType="TopoSymbols" >
+		SELECT
+		<include refid="topoSymbolsColumns"/>
+		FROM topo_symbols a
+		<where>
+			a.del_flag = '0'
+			<if test="topoSymbols.view != null and topoSymbols.view.id != null and topoSymbols.view.id != ''">
+				and a.view_id = #{topoSymbols.view.id}
+			</if>
+		</where>
+			ORDER BY a.update_date DESC
+	</select>
+
+
+
+	<select id="findListByUser" resultType="TopoSymbols" >
+		SELECT
+		<include refid="topoSymbolsColumns"/>
+		FROM topo_symbols a
+		<include refid="topoSymbolsJoins"/>
+		WHERE a.del_flag = '0' AND a.view_id IN (SELECT id FROM topo_view WHERE user_id = #{userId}
+													<if test="topoVIewId != null and topoVIewId != ''">
+													   and id = #{topoVIewId}
+													</if>
+												)
+
+	</select>
+
+
+
+	
+	<select id="findAllList" resultType="TopoSymbols" >
+		SELECT 
+			<include refid="topoSymbolsColumns"/>
+		FROM topo_symbols a
+		<include refid="topoSymbolsJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT IGNORE  INTO topo_symbols(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			name,
+			x,
+			y,
+			type,
+			timestamp,
+			view_id,
+			parent_id,
+			object_id,
+			object_class,
+			options,
+			url,
+			alarm,
+			style
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{name},
+			#{x},
+			#{y},
+			#{type},
+			#{timestamp},
+			#{view.id},
+			#{parentId},
+			#{objectId},
+			#{objectClass},
+			#{option},
+			#{url},
+			#{alarm},
+			#{style}
+		)
+	</insert>
+
+
+
+	<insert id="saveList">
+		INSERT INTO topo_symbols(
+		id,
+		create_by,
+		create_date,
+		update_by,
+		update_date,
+		remarks,
+		del_flag,
+		name,
+		x,
+		y,
+		type,
+		timestamp,
+		view_id,
+		parent_id,
+		object_id,
+		object_class,
+		options,
+		url,
+		alarm,
+		style
+		)
+		<foreach collection="list" item="ts" separator=" union all ">
+			SELECT 	#{ts.id},
+			#{ts.createBy.id},
+			#{ts.createDate},
+			#{ts.updateBy.id},
+			#{ts.updateDate},
+			#{ts.remarks},
+			#{ts.delFlag},
+			#{ts.name},
+			#{ts.x},
+			#{ts.y},
+			#{ts.type},
+			#{ts.timestamp},
+			#{ts.view.id},
+			#{ts.parentId},
+			#{ts.objectId},
+			#{ts.objectClass},
+			#{ts.option},
+			#{ts.url},
+			#{ts.alarm},
+			#{ts.style}  FROM dual
+		</foreach>
+
+
+	</insert>
+
+	
+	<update id="update">
+		UPDATE topo_symbols SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			name = #{name},
+			x = #{x},
+			y = #{y},
+			type = #{type},
+			timestamp = #{timestamp},
+			view_id = #{view.id},
+			parent_id = #{parentId},
+			object_id = #{objectId},
+			object_class = #{objectClass},
+			options = #{option},
+			url = #{url},
+			alarm = #{alarm},
+			style = #{style}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM topo_symbols
+		WHERE id = #{id}
+	</update>
+
+
+	<update id="deleteSymbolsLinkLine">
+		DELETE FROM topo_line
+		WHERE src_symbol = #{id} OR dst_symbol = #{id}
+	</update>
+
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE topo_symbols SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="TopoSymbols" statementType="STATEMENT">
+		select * FROM topo_symbols  where ${propertyName} = '${value}'
+	</select>
+	<select id="getSymbolIdByResourceIdAndTopoViewId" resultType="String" >
+		select id FROM topo_symbols  where object_id= #{resourceId} AND view_id = #{viewId}
+	</select>
+	<select id="getSymbolWithResourceIdAndTopoViewId" resultType="TopoSymbols" >
+		select * FROM topo_symbols  where object_id= #{resourceId} AND view_id = #{viewId}
+	</select>
+
+
+	
+</mapper>

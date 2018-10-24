@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.oa.mapper.TurnoverMapper">
+    
+	<sql id="turnoverColumns">
+		a.*,
+		u.id AS "createBy.id",
+		u.name AS "createBy.name",
+		o.id AS "createBy.office.id",
+		o.name AS "createBy.office.name"
+	</sql>
+	<sql id="turnoverJoins">
+		JOIN sys_user u ON u.id = a.create_by
+		JOIN sys_office o ON o.id = u.office_id
+	</sql>
+
+    
+	<select id="get" resultType="Turnover">
+		SELECT 
+		<include refid="turnoverColumns"/>
+		FROM oa_out_records a
+		<include refid="turnoverJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="Turnover">
+		SELECT
+		<include refid="turnoverColumns"/>
+		FROM oa_out_records a
+		<include refid="turnoverJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+		<if test="createDateStart != null">
+			AND a.create_date &gt;= #{createDateStart}
+		</if>
+		<if test="createDateEnd != null">
+			AND a.create_date &lt;= #{createDateEnd}
+		</if>
+
+		<if test="ids != null and ids != ''">
+			AND a.id IN (${ids})
+		</if>
+		${dataScope}
+		ORDER BY a.id DESC
+	</select>
+
+	<select id="findAllList" resultType="Turnover">
+		SELECT
+		<include refid="turnoverColumns"/>
+		FROM oa_out_records a
+		<include refid="turnoverJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+		ORDER BY a.id DESC
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO oa_out_records(
+			id,
+			process_instance_id,
+			reason,
+			units,
+			name,
+			entry_time,
+			departure_time,
+			apply_time,
+			reality_entry_time,
+			reality_departure_time,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{processInstanceId},
+			#{reason},
+			#{units},
+			#{name},
+			#{entryTime},
+			#{departureTime},
+			#{createDate},
+			#{realityEntryTime},
+			#{realityDepartureTime},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+
+		)
+	</insert>
+
+	<update id="updateRealityTime">
+		UPDATE oa_out_records SET
+		reality_entry_time = #{realityEntryTime},
+		reality_departure_time = #{realityDepartureTime},
+		update_by = #{updateBy.id},
+		update_date = #{updateDate},
+		remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateProcessInstanceId">
+		UPDATE oa_out_records SET
+		process_instance_id = #{processInstanceId}
+		WHERE id = #{id}
+	</update>
+
+	<update id="update">
+		UPDATE oa_out_records SET
+		units = #{units},
+		reason = #{reason},
+		name = #{name},
+		entry_time = #{entryTime},
+		departure_time = #{departureTime},
+		reason = #{reason},
+		update_by = #{updateBy.id},
+		update_date = #{updateDate},
+		remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE oa_out_records SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.cpu.mapper.CpuMapper">
+    
+	<sql id="cpuColumns">
+		a.id AS "id",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.resource_id AS "resourceId",
+		a.sort AS "sort",
+		a.name AS "name",
+		a.value AS "value"
+	</sql>
+	
+	<sql id="cpuJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="Cpu" >
+		SELECT 
+			<include refid="cpuColumns"/>
+		FROM cpu a
+		<include refid="cpuJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getWithResourceId" resultType="Cpu" >
+		SELECT
+			<include refid="cpuColumns"/>
+		FROM cpu a
+		<include refid="cpuJoins"/>
+		WHERE a.resource_id = #{resourceId}
+	</select>
+	
+	<select id="findList" resultType="Cpu" >
+		SELECT 
+			<include refid="cpuColumns"/>
+		FROM cpu a
+		<include refid="cpuJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="resourceId != null and resourceId != ''">
+				AND a.resource_id = #{resourceId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.sort ASC
+			</otherwise>
+		</choose>
+	</select>
+
+
+
+
+	<select id="findUsedRateList" resultType="CpuUsedRate" >
+
+		SELECT
+		a.create_date AS "createDate",
+		a.resource_id AS "resourceId",
+		a.used_rate AS "usedRate"
+		FROM cpu_used_rate a
+		WHERE a.resource_id = #{resourceId}  ORDER BY cast(a.used_rate as decimal(10,3))  DESC
+	</select>
+
+
+	<select id="findUsedRateListOfTime" resultType="CpuUsedRate" >
+		SELECT
+		a.create_date AS "createDate",
+		a.resource_id AS "resourceId",
+		a.used_rate AS "usedRate"
+		FROM cpu_used_rate a
+		WHERE a.resource_id = #{resourceId} AND  (a.create_date BETWEEN #{beginDate} AND #{endDate}) ORDER BY cast(a.used_rate as decimal(10,3))  DESC
+	</select>
+
+
+	<select id="findUsedRateListOfTimeType" resultType="CpuUsedRate" >
+		SELECT
+		a.create_date AS "createDate",
+		a.resource_id AS "resourceId",
+		a.used_rate AS "usedRate"
+		FROM cpu_used_rate a
+		LEFT JOIN resource r on r.id = a.resource_id
+		LEFT JOIN resource_type t on t.id =  r.resource_type
+		WHERE  t.parent_id =#{resourceTypeId}  AND  (a.create_date BETWEEN #{beginDate} AND #{endDate}) ORDER BY cast(a.used_rate as decimal(10,3))  DESC
+	</select>
+
+
+
+
+	<select id="findTotalUsedRateListOfTime" resultType="String" >
+		SELECT
+		SUM(a.used_rate)
+		FROM cpu_used_rate a
+		WHERE a.resource_id = #{resourceId} AND  a.create_date BETWEEN #{beginDate} AND #{endDate} ORDER BY cast(a.used_rate as decimal(10,3))  DESC
+	</select>
+
+	
+	<select id="findAllList" resultType="Cpu" >
+		SELECT 
+			<include refid="cpuColumns"/>
+		FROM cpu a
+		<include refid="cpuJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.sort ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cpu(
+			id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			resource_id,
+			sort,
+			name,
+			value
+		) VALUES (
+			#{id},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{resourceId},
+			#{sort},
+			#{name},
+			#{value}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cpu SET 	
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			resource_id = #{resourceId},
+			sort = #{sort},
+			name = #{name},
+			value = #{value}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM cpu
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE cpu SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="Cpu" statementType="STATEMENT">
+		select * FROM cpu  where ${propertyName} = '${value}'
+	</select>
+
+	<!--根据资源删除-->
+	<update id="delByResourceId">
+		DELETE FROM cpu WHERE resource_id = #{id}
+	</update>
+
+	<insert id="saveList">
+		INSERT INTO cpu(
+		id,
+		create_by,
+		create_date,
+		update_by,
+		update_date,
+		remarks,
+		del_flag,
+		resource_id,
+		sort,
+		name,
+		value
+		)
+		<foreach collection="list" item="cpu" separator=" union all ">
+			SELECT 	#{cpu.id},
+			#{cpu.createBy.id},
+			#{cpu.createDate},
+			#{cpu.updateBy.id},
+			#{cpu.updateDate},
+			#{cpu.remarks},
+			#{cpu.delFlag},
+			#{cpu.resourceId},
+			#{cpu.sort},
+			#{cpu.name},
+			#{cpu.value} FROM dual
+		</foreach>
+	</insert>
+
+
+
+	<!--内存利用率-->
+	<insert id="saveCpuUsedRate">
+		INSERT INTO cpu_used_rate(
+		create_date,
+		resource_id,
+		used_rate
+		) VALUES (
+		#{cpuUsedRate.createDate},
+		#{cpuUsedRate.resourceId},
+		#{cpuUsedRate.usedRate}
+		)
+	</insert>
+
+
+	<select id="getTopCpuUsedRate" resultType="CpuUsedRate" >
+		SELECT
+		a.create_date AS "createDate",
+		a.resource_id AS "resourceId",
+		a.used_rate AS "usedRate"
+		FROM cpu_used_rate a
+		WHERE a.resource_id = #{resourceId}  ORDER BY a.create_date DESC  limit 1
+	</select>
+
+	<select id="getCpuPanorama" resultType="CpuUsedRate">
+		SELECT a.create_date AS "createDate",
+		a.resource_id AS "resourceId",
+		a.used_rate AS "usedRate"
+		FROM cpu_used_rate a
+	</select>
+
+
+</mapper>

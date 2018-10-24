@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.oa.mapper.DevicePurchaseMapper">
+
+    <sql id="devicePurchaseColumns">
+        a.id AS "id",
+        a.devName AS "devName",
+        a.devSource AS "devSource",
+        a.purTime AS "purTime",
+        a.purUser AS "purUser",
+        u.`name` AS "purName",
+        a.purMoney AS "purMoney",
+        a.audUser AS "audUser",
+        e.`name` AS "audName",
+        a.isflag AS "isflag",
+        a.isorder AS "isorder",
+        a.ordTime AS "ordTime",
+        a.deviceId AS "deviceId",
+        a.isarrival AS "isarrival",
+        a.arriTime AS "arriTime",
+        a.del_flag AS "delFlag"
+    </sql>
+
+    <sql id="devicePurchaseJoins">
+        LEFT JOIN sys_user u ON u.id= a.purUser
+        LEFT JOIN sys_user e ON e.id = a.audUser
+    </sql>
+
+    <select id="get" resultType="DevicePurchase">
+        SELECT
+        <include refid="devicePurchaseColumns"/>
+        FROM oa_device_purchase a
+        <include refid="devicePurchaseJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="DevicePurchase">
+        SELECT
+        <include refid="devicePurchaseColumns"/>
+        FROM oa_device_purchase a
+        <include refid="devicePurchaseJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="devName != null and devName != ''">
+                AND a.devName LIKE
+                <if test="dbName == 'mysql'">concat('%',#{devName},'%')</if>
+            </if>
+        </where>
+    </select>
+
+    <select id="findAllList" resultType="DevicePurchase">
+        SELECT
+        <include refid="devicePurchaseColumns"/>
+        FROM oa_device_purchase a
+        <include refid="devicePurchaseJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+    </select>
+
+    <insert id="insert">
+      INSERT INTO oa_device_purchase(
+		id,
+        devName,
+        devSource,
+        purTime,
+        purUser,
+        purMoney
+		) VALUES (
+		#{id},
+		#{devName},
+		#{devSource},
+		#{purTime},
+		#{purUser},
+		#{purMoney}
+		)
+    </insert>
+
+    <update id="update">
+        UPDATE oa_device_purchase SET
+        devName=#{devName},
+        devSource=#{devSource},
+        purTime=#{purTime},
+        purUser=#{purUser},
+        purMoney=#{purMoney},
+        isorder=#{isorder},
+        isflag=#{isflag},
+        isarrival=#{isarrival},
+        audUser=#{audUser},
+        ordTime=#{ordTime},
+        arriTime=#{arriTime}
+		WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+--         DELETE FROM oa_device_purchase
+        UPDATE oa_device_purchase SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+    </update>
+</mapper>

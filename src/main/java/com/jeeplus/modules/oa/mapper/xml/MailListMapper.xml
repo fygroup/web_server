@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.oa.mapper.MailListMapper">
+
+    <sql id="mailListColumns">
+        a.id,
+        a.`name`,
+        a.sex,
+        a.phone,
+        a.org_id "orgId",
+        s.`name` "orgName",
+        a.address,
+        a.establish,
+        a.establish_time "establishTime",
+        a.delete_flag "deleteFlag",
+        a.delete_time "deleteTime",
+        a.del_flag AS "delFlag"
+    </sql>
+
+    <sql id="mailListJoins">
+          LEFT JOIN sys_office s ON s.id=a.org_id
+    </sql>
+
+    <select id="get" resultType="MailList">
+        SELECT
+        <include refid="mailListColumns"/>
+        FROM mo_maillist a
+        <include refid="mailListJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="MailList">
+        SELECT
+        <include refid="mailListColumns"/>
+        FROM mo_maillist a
+        <include refid="mailListJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="name != null and name != ''">
+                AND a.`name` LIKE
+                <if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+            </if>
+            <if test="orgName != null and orgName != ''">
+                AND s.`name` LIKE
+                <if test="dbName == 'mysql'">concat('%',#{orgName},'%')</if>
+            </if>
+        </where>
+    </select>
+
+    <select id="findAllList" resultType="MailList">
+        SELECT
+        <include refid="mailListColumns"/>
+        FROM mo_maillist a
+        <include refid="mailListJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+    </select>
+
+    <insert id="insert">
+      INSERT INTO mo_maillist(
+		id,
+		`name`,
+		sex,
+		phone,
+        org_id,
+        address,
+        establish,
+        establish_time
+		) VALUES (
+		#{id},
+		#{name},
+		#{sex},
+		#{phone},
+		#{orgId},
+		#{address},
+		#{establish},
+		#{establishTime}
+		)
+    </insert>
+
+    <update id="update">
+        UPDATE mo_maillist SET
+		`name`=#{name},
+		sex=#{sex},
+		phone=#{phone},
+		org_id=#{orgId},
+		address=#{address},
+		establish=#{establish},
+		establish_time=#{establishTime}
+		WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+--         DELETE FROM mo_maillist
+        UPDATE mo_maillist SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+    </update>
+</mapper>
