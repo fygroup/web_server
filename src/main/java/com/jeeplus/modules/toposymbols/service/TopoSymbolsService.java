@@ -82,6 +82,7 @@ public class TopoSymbolsService extends CrudService<TopoSymbolsMapper, TopoSymbo
 
 	@Transactional(readOnly = false)
 	public void saveSymbolsAndLines(String addSymbolsString,String addLineString){
+		Long start=System.currentTimeMillis();
 		Date now=new Date();
 
 		addSymbolsString = addSymbolsString.replaceAll("&quot;","'");
@@ -194,6 +195,8 @@ public class TopoSymbolsService extends CrudService<TopoSymbolsMapper, TopoSymbo
 			  topoLineMapper.saveList(lineList);
 		  }
 
+		  System.out.print("===== saveTopo"+(System.currentTimeMillis()-start));
+
 	  }
 	}
 
@@ -250,5 +253,10 @@ public class TopoSymbolsService extends CrudService<TopoSymbolsMapper, TopoSymbo
 				topoLineService.delete(topoLine);
 			}
 		}
+	}
+
+	@Transactional(readOnly = false)
+	public void delByResourceId( String resourceId){
+		topoSymbolsMapper.delByResourceId(resourceId);
 	}
 }

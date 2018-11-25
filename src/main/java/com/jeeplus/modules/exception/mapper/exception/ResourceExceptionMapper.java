@@ -24,9 +24,11 @@ public interface ResourceExceptionMapper extends BaseMapper<ResourceException> {
 
     List<ResourceException> findListByResource(@Param(value = "resourceId") String resourceId,@Param(value = "exceptionClass")String exceptionClass);
 
+    List<ResourceException> findEListByResource(@Param(value = "resourceId") String resourceId,@Param(value = "exceptionClass")String exceptionClass);
+
     List<ResourceException> findListByResourceDate(@Param(value = "resourceId") String resourceId,@Param(value = "exceptionClass")String exceptionClass, @Param(value = "beginDate") Date beginDate , @Param(value = "endDate") Date endDate );
 
-
+    void delByResourceId(@Param(value = "resourceId") String  resourceId);
 
     int delete(@Param(value = "id") String id);
 

@@ -37,7 +37,7 @@
 			    // 获取当前节点
 			    var treeNode = e.node;
 			    var id = treeNode.id == '0' ? '' :treeNode.id;
-				if(treeNode.level == 0){//level=0 代表公司
+				if(treeNode.level == 0){//level=0 代表法院
 					$("#companyId").val(id);
 					$("#officeId").val("");
 				}else{
@@ -113,7 +113,7 @@
 				        sortable: true
 				    }, {
 				        field: 'company.name',
-				        title: '归属公司'
+				        title: '归属法院'
 				    }, {
 				        field: 'office.name',
 				        title: '归属部门'

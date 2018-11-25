@@ -136,7 +136,7 @@ public class NetworkInterfaceIndicatorCalculateFirewall {
         if (response.getResponse() == null) {
             return;
         } else {
-            Vector<VariableBinding> recVBs = response.getResponse()
+            Vector<VariableBinding> recVBs =  (Vector<VariableBinding>) response.getResponse()
                     .getVariableBindings();
             String oid = recVBs.elementAt(0).getOid().toString();
 

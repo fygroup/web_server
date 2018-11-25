@@ -23,14 +23,14 @@ public class GeneralMethod {
      * @return
      */
     public static ResourceOidValue getSysOid(String ip, String community, String port, String timeout, String retries) {
-        return SnmpUtil.snmpGet(ip, community, oidval, port, timeout,retries,2);
+        return SnmpUtil.snmpGet(ip, community, oidval, port, timeout,retries,1);
     }
 
 
 
     public static void main(String[] args) throws Exception {
         try {
-            System.out.println(getSysOid("139.0.1.245", "public","161", "500", "1").getValue());
+            System.out.println(getSysName("172.16.212.200", "ssfy","161", "500", "1").getValue());
             //getHardpan();
             //System.out.println(CpuIndicatorCalculateLinux.getCpuUse().get("cpuLoad").toString().equals("-1"));
         } catch (Exception e) {

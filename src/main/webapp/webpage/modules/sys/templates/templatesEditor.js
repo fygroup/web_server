@@ -46,7 +46,7 @@
 				$(".selectbtn").show();
 			},
 			error:function(){
-				alert("接口列表失败dfgdfgdfgfd");
+				//alert("接口列表失败dfgdfgdfgfd");
 			},
 			complete:function(XMLHttpRequest,status){
 				if(status=='timeout'){

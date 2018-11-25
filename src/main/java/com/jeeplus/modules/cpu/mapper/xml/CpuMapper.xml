@@ -69,7 +69,7 @@
 		a.resource_id AS "resourceId",
 		a.used_rate AS "usedRate"
 		FROM cpu_used_rate a
-		WHERE a.resource_id = #{resourceId}  ORDER BY cast(a.used_rate as decimal(10,3))  DESC
+		WHERE a.resource_id = #{resourceId}  ORDER BY /*cast(a.used_rate as decimal(10,3))*/ a.create_date  DESC
 	</select>
 
 
@@ -82,7 +82,7 @@
 		WHERE a.resource_id = #{resourceId} AND  (a.create_date BETWEEN #{beginDate} AND #{endDate}) ORDER BY cast(a.used_rate as decimal(10,3))  DESC
 	</select>
 
-
+	<!--WHERE  t.parent_id =#{resourceTypeId}  AND  (a.create_date BETWEEN #{beginDate} AND #{endDate}) ORDER BY cast(a.used_rate as decimal(10,3))  DESC-->
 	<select id="findUsedRateListOfTimeType" resultType="CpuUsedRate" >
 		SELECT
 		a.create_date AS "createDate",
@@ -91,7 +91,7 @@
 		FROM cpu_used_rate a
 		LEFT JOIN resource r on r.id = a.resource_id
 		LEFT JOIN resource_type t on t.id =  r.resource_type
-		WHERE  t.parent_id =#{resourceTypeId}  AND  (a.create_date BETWEEN #{beginDate} AND #{endDate}) ORDER BY cast(a.used_rate as decimal(10,3))  DESC
+		WHERE  t.parent_id =#{resourceTypeId}  ORDER BY cast(a.used_rate as decimal(10,3))desc
 	</select>
 
 
@@ -102,6 +102,22 @@
 		SUM(a.used_rate)
 		FROM cpu_used_rate a
 		WHERE a.resource_id = #{resourceId} AND  a.create_date BETWEEN #{beginDate} AND #{endDate} ORDER BY cast(a.used_rate as decimal(10,3))  DESC
+	</select>
+
+	<select id="findCpuUsedRate" resultType="String" >
+		SELECT
+		a.used_rate
+		FROM cpu_used_rate a
+		WHERE a.resource_id = #{resourceId}  ORDER BY cast(a.used_rate as decimal(10,3)) desc
+	</select>
+
+
+
+	<select id="findCpuUsedRateNew" resultType="String" >
+		SELECT
+		a.used_rate
+		FROM cpu_used_rate a
+		WHERE a.resource_id = #{resourceId}  ORDER BY cast(a.used_rate as decimal(10,3)),a.create_date DESC  limit 1
 	</select>
 
 	

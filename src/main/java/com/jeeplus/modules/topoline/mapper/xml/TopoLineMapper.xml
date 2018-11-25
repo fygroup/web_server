@@ -220,6 +220,11 @@
 	</update>
 
 
+	<update id="delByResourceId">
+		DELETE FROM topo_line
+		WHERE src_symbol = (select id  from topo_symbols where object_id = #{resourceId}) or dst_symbol = (select id  from topo_symbols where object_id = #{resourceId})
+	</update>
+
 
 
 	<update id="delByViewId">

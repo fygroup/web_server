@@ -34,6 +34,9 @@ import com.jeeplus.modules.collect.database.sqlserver.DataSizeCalculateSqlserver
 import com.jeeplus.modules.collect.database.sqlserver.ResponseTimeCalculateSqlserver;
 import com.jeeplus.modules.collect.middleware.tomcat.GeneralTomcatIndicator;
 import com.jeeplus.modules.collect.middleware.tomcat.entity.TomcatInfo;
+import com.jeeplus.modules.collect.networkequipment.router.memory.MemoryIndicatorCalculateRouterHuawei;
+import com.jeeplus.modules.collect.server.windows.memory.MemoryIndicatorCalculateWindows;
+import com.jeeplus.modules.collect.server.windows.memory.MemoryIndicatorCalculateWindowsByV1V2;
 import com.jeeplus.modules.cpu.entity.Cpu;
 import com.jeeplus.modules.cpu.entity.CpuUsedRate;
 import com.jeeplus.modules.cpu.service.CpuService;
@@ -75,6 +78,7 @@ import com.jeeplus.modules.sys.service.AreaService;
 import com.jeeplus.modules.sys.service.DictTypeService;
 import com.jeeplus.modules.sys.utils.DictUtils;
 import com.jeeplus.modules.sys.utils.UserUtils;
+import com.jeeplus.modules.update.UpdateService;
 import com.jeeplus.modules.update.application.ApplicationIndicator;
 import com.jeeplus.modules.update.database.DatabaseIndicator;
 import com.jeeplus.modules.update.link.LinkRateIndicator;
@@ -164,6 +168,8 @@ import java.sql.*;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
+
 import static com.jeeplus.modules.cpu.web.CpuController.calculationThreshold;
 import jxl.write.Label;
 /**
@@ -365,8 +371,8 @@ public class ResourceController extends BaseController {
 		ResourceBaseInfo resourceBaseInfo=new ResourceBaseInfo();
 		resourceBaseInfo.setRdcommunity(rdcommunity);
 		resourceBaseInfo.setPort("161");
-		resourceBaseInfo.setDelay("500");
-		resourceBaseInfo.setRepeatnum("2");
+		resourceBaseInfo.setDelay("600");
+		resourceBaseInfo.setRepeatnum("4");
 		resourceBaseInfo.setManagerType(snmpType);
 
 		ResourceOidValue desc = GeneralMethod.getDescription(resource.getIp(),  resourceBaseInfo.getRdcommunity(), resourceBaseInfo.getPort(), resourceBaseInfo.getDelay(), resourceBaseInfo.getRepeatnum());
@@ -881,7 +887,7 @@ public class ResourceController extends BaseController {
 		if(dictType!=null){
 			typeList=dictTypeService.getDictValueList(dictType);
 		}
-
+		model.addAttribute("mokaCollectorList", resourceService.getCollectorList());
 		model.addAttribute("typeList", typeList);
 		model.addAttribute("resource", resource);
 		model.addAttribute("resourceBaseInfo", resourceBaseInfo);
@@ -1028,7 +1034,7 @@ public class ResourceController extends BaseController {
 			stringBuffer.append("\"status\":401");
 		}else {
 			if ("1".equals(type) || "2".equals(type)) {
-				ResourceOidValue oid = GeneralMethod.getSysOid(ip, rdcommunity, port, "500", "4");
+				ResourceOidValue oid = GeneralMethod.getSysOid(ip, rdcommunity, port, "600", "4");
 				if (oid != null && StringUtils.isNotBlank(oid.getValue())) {
 					stringBuffer.append("\"status\":200");
 				}
@@ -1306,8 +1312,8 @@ public class ResourceController extends BaseController {
 			linkIndicator.setStatus("UP");
 			linkIndicator.setHealthDegree("100");
 			linkIndicator.setAvailability("100");
-			ResourceOidValue upOid = GeneralMethod.getSysOid(upResource.getIp(), upResource.getResourceBaseInfo().getRdcommunity(), upResource.getResourceBaseInfo().getPort(), "500", "2");
-			ResourceOidValue downOid = GeneralMethod.getSysOid(downResource.getIp(), downResource.getResourceBaseInfo().getRdcommunity(), downResource.getResourceBaseInfo().getPort(), "500", "2");
+			ResourceOidValue upOid = GeneralMethod.getSysOid(upResource.getIp(), upResource.getResourceBaseInfo().getRdcommunity(), upResource.getResourceBaseInfo().getPort(), "600", "4");
+			ResourceOidValue downOid = GeneralMethod.getSysOid(downResource.getIp(), downResource.getResourceBaseInfo().getRdcommunity(), downResource.getResourceBaseInfo().getPort(), "600", "4");
 			if (upOid == null || upOid.getValue() == null || downOid == null || downOid.getValue() == null) {
 				linkIndicator.setStatus("DOWN");
 				linkIndicator.setHealthDegree("0");
@@ -3278,6 +3284,8 @@ public class ResourceController extends BaseController {
 	//查看资源详情
 	@RequestMapping(value = "getInfo")
 	public String getInfo(Resource resource ) {
+		long start =System.currentTimeMillis();
+		System.out.println("=====> "+(System.currentTimeMillis()-start));
 		ResourceType resourceType =resourceTypeService.getParentByChild(resource.getResourceType().getId());
 		if(resourceType==null||StringUtils.isEmpty(resourceType.getCode()) ){
 			return "redirect:"+Global.getAdminPath()+"/resource/resource/list?repage";
@@ -3286,6 +3294,7 @@ public class ResourceController extends BaseController {
 			return "redirect:"+Global.getAdminPath()+"/resource/resource/getnetworkEquipmentDetail?id="+resource.getId();
 		}
 		if("2".equals(resourceType.getCode())) { //服务器
+			System.out.println("=====> "+(System.currentTimeMillis()-start));
 				return "redirect:"+Global.getAdminPath()+"/resource/resource/serverDetail?id="+resource.getId();
 		}
 		if("4".equals(resourceType.getCode())) { //数据库
@@ -3312,6 +3321,9 @@ public class ResourceController extends BaseController {
 	@RequestMapping(value = "serverDetail")
 	public String serverDetail(Resource resource, Model model) {
 		long start =System.currentTimeMillis();
+		//List<Map<String, Object>> memoryList = MemoryIndicatorCalculateWindows.getVirtualPhysicalMemory(resource.getIp(), resource.getResourceBaseInfo().getRdcommunity(), resource.getResourceBaseInfo().getPort(), resource.getResourceBaseInfo().getDelay(), resource.getResourceBaseInfo().getRepeatnum(), Transformation.null2Integer(resource.getResourceBaseInfo().getManagerType()));
+
+
 		//System.out.println("+++++++000 "+(System.currentTimeMillis()-start));
 		if(StringUtils.isNotBlank(resource.getOperatingSystemId())){
 			model.addAttribute("operatingSystemId", operatingSystemService.get(resource.getOperatingSystemId()));
@@ -3363,7 +3375,7 @@ public class ResourceController extends BaseController {
 		model.addAttribute("resourceInformation", resourceInformationService.getByResourceId(resource.getId()));
 
 		model.addAttribute("resource", resource);
-		//System.out.println("+++++++555 "+(System.currentTimeMillis()-start));
+		//System.out.println("+++++++=====>"+(System.currentTimeMillis()-start));
 		return "modules/resource/serverDetail";
 	}
 
@@ -3878,12 +3890,14 @@ public class ResourceController extends BaseController {
 			String[] memoryUsedRate = new String[countTimes];
 			String[] availabilityRate = new String[countTimes];
 			String[] healthyRate = new String[countTimes];
-			for (int i = 0; i < countTimes; i++) {
-				time[i] = getDateString(memoryUsedRateList.get(i).getCreateDate());
-				cpuUsedRate[i] = cpuUsedRateList.get(i).getUsedRate();
-				memoryUsedRate[i] = memoryUsedRateList.get(i).getUsedRate();
-				availabilityRate[i] = availabilityRateList.get(i).getAvailabilityRate();
-				healthyRate[i] =healthDegreeList.get(i).getHealthDegree();
+			int index=1;
+			for (int i = 0; i <countTimes; i++) {
+				time[i] = getDateString(memoryUsedRateList.get(countTimes-index).getCreateDate());
+				cpuUsedRate[i] = cpuUsedRateList.get(countTimes-index).getUsedRate();
+				memoryUsedRate[i] = memoryUsedRateList.get(countTimes-index).getUsedRate();
+				availabilityRate[i] = availabilityRateList.get(countTimes-index).getAvailabilityRate();
+				healthyRate[i] =healthDegreeList.get(countTimes-index).getHealthDegree();
+				index++;
 			}
 			data.put("time",time);
 			data.put("cpuUsedRate", cpuUsedRate);
@@ -3916,10 +3930,14 @@ public class ResourceController extends BaseController {
 			String[] time = new String[countTimes];
 			String[] availabilityRate = new String[countTimes];
 			String[] healthyRate = new String[countTimes];
+
+			int index=1;
+
 			for (int i = 0; i < countTimes; i++) {
-				time[i] = getDateString(availabilityRateList.get(i).getCreateDate());
-				availabilityRate[i] = availabilityRateList.get(i).getAvailabilityRate();
-				healthyRate[i] =healthDegreeList.get(i).getHealthDegree();
+				time[i] = getDateString(availabilityRateList.get(countTimes-index).getCreateDate());
+				availabilityRate[i] = availabilityRateList.get(countTimes-index).getAvailabilityRate();
+				healthyRate[i] =healthDegreeList.get(countTimes-index).getHealthDegree();
+				index++;
 			}
 			data.put("time",time);
 			data.put("availabilityRate", availabilityRate);
@@ -4867,6 +4885,33 @@ public class ResourceController extends BaseController {
 		}
 		return false;
 	}
+
+
+
+
+
+	/**
+	 * 更新资源ip
+	 * @param ip
+	 * @param resourceId
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "updateResourceIp",method = RequestMethod.POST)
+	public Boolean updateResourceIp(String ip,String resourceId) {
+		if(StringUtils.isEmpty(ip)||StringUtils.isEmpty(resourceId)){
+			return false;
+		}
+		int num=resourceService.updateResourceIp(resourceId,ip);
+		if(num==1){
+			return true;
+		}
+		return false;
+	}
+
+
+
+
 
 
 	/**

@@ -164,7 +164,7 @@
 				<div class="col-sm-8">
 					<select name="manufacturer" id="manufacturer" class="form-control" >
 						<c:forEach items="${manufacturerList}" var="item" varStatus="index">
-							    <option value="${item.id}">${item.name}</option>
+							<option value="${item.id}"  <c:if test="${resource.manufacturer.id == item.id}" > selected="selected" </c:if>  >${item.name}</option>
 						</c:forEach>
 					</select>
 				</div>
@@ -185,8 +185,8 @@
 
 
 			<div class="form-group">
-				<%--<label class="col-sm-2 control-label"><font color="red">*</font>归属公司：</label>--%>
-				<label class="col-sm-2 control-label"><font color="red">*</font>归属机构：</label>
+				<%--<label class="col-sm-2 control-label"><font color="red">*</font>归属法院：</label>--%>
+				<label class="col-sm-2 control-label"><font color="red">*</font>归属法院：</label>
 				<div class="col-sm-8">
 					<sys:treeselect id="company" name="company" value="${resource.company.id}" labelName="company" labelValue="${resource.company.name}"
 									title="部门" url="/sys/office/treeData?type=2" cssClass="form-control required" notAllowSelectParent="true" />
@@ -205,18 +205,18 @@
 				</div>
 			</div>
 
-
-			<div class="form-group">
+			<input type="hidden" name="managerType" value="1"   checked="checked" onchange="setManagerType(this)">
+			<%--<div class="form-group">
 				<label class="col-sm-2 control-label"><font color="red">*</font>管理方式：</label>
 
 				<div class="col-sm-8">
 					<input type="radio" name="managerType" value="1"  checked="checked" onchange="setManagerType(this)"> SNMPV1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="managerType" value="2" onchange="setManagerType(this)"> SNMPV2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-					<%--<input type="radio" name="managerType" value="3" onchange="setManagerType(this)"> SNMPV3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="managerType" value="4" onchange="setManagerType(this)"> 访问配置
-				--%>
+					&lt;%&ndash;<input type="radio" name="managerType" value="3" onchange="setManagerType(this)"> SNMPV3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="managerType" value="4" onchange="setManagerType(this)"> 访问配置
+				&ndash;%&gt;
 				</div>
 
-			</div>
+			</div>--%>
 
 			<div id="managerTypeDiv">
 				<div class="form-group">
@@ -229,14 +229,14 @@
 				<div class="form-group">
 					<label class="col-sm-2 control-label"><font color="red">*</font>读共同体：</label>
 					<div class="col-sm-8">
-						<input name= "rdcommunity" htmlEscape="false"   id="rdcommunity"  class="form-control required"/>
+						<input name= "rdcommunity" htmlEscape="false" value="${resourceBaseInfo.rdcommunity}"  id="rdcommunity"  class="form-control required"/>
 					</div>
 				</div>
 
 				<div class="form-group">
 					<label class="col-sm-2 control-label"><font color="red">*</font>延时（毫秒）：</label>
 					<div class="col-sm-8">
-						<input name= "delay" htmlEscape="false"    class="form-control required isIntGtZero" value="${resourceBaseInfo.delay}"/>
+						<input name= "delay" htmlEscape="false"   class="form-control required isIntGtZero" value="${resourceBaseInfo.delay}"/>
 					</div>
 				</div>
 				<div class="form-group">
@@ -280,7 +280,7 @@
 				<div class="form-group">
 					<label class="col-sm-2 control-label"><font color="red">*</font>读共同体：</label>
 					<div class="col-sm-8">
-						<input name= "rdcommunity" htmlEscape="false" id="rdcommunity"   class="form-control required"/>
+						<input name= "rdcommunity" htmlEscape="false"  value="${resourceBaseInfo.rdcommunity}"   id="rdcommunity"   class="form-control required"/>
 					</div>
 				</div>
 

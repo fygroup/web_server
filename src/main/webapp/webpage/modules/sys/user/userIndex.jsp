@@ -27,9 +27,9 @@
 				<div class="accordion-inner">
 					<form id="searchForm" class="form form-horizontal well clearfix" >
 						<div class="col-xs-12 col-sm-6 col-md-4">
-					    	<label class="label-item single-overflow pull-left" title="公司：">归属公司：</label>
+					    	<label class="label-item single-overflow pull-left" title="公司：">归属法院：</label>
 					    	<sys:treeselect id="company" name="company.id"
-										title="公司" url="/sys/office/treeData?type=1" cssClass=" form-control" allowClear="true"/>
+										title="法院" url="/sys/office/treeData?type=1" cssClass=" form-control" allowClear="true"/>
 					    </div>
 					    <div class="col-xs-12 col-sm-6 col-md-4">
 					    	<label class="label-item single-overflow pull-left" title="员工：">归属部门：</label>

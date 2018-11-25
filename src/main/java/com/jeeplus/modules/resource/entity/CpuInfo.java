@@ -25,7 +25,7 @@ public class CpuInfo extends DataEntity<CpuInfo> {
 	private String subnetmask;		// 子网掩码
 	private String delay;		// 延时（毫秒）
 	private String repeatnum;		// 重试次数
-	private Office company;		// 归属公司
+	private Office company;		// 归属法院
 	private String description;
 
 	public CpuInfo() {
@@ -126,7 +126,7 @@ public class CpuInfo extends DataEntity<CpuInfo> {
 		this.repeatnum = repeatnum;
 	}
 	
-	@ExcelField(title="归属公司", fieldType=String.class, value="", align=2, sort=17)
+	@ExcelField(title="归属法院", fieldType=String.class, value="", align=2, sort=17)
 	public Office getCompany() {
 		return company;
 	}

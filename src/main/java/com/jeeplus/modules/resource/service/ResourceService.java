@@ -27,8 +27,10 @@ import com.jeeplus.modules.resourcegatheritem.service.ResourceGatherItemService;
 import com.jeeplus.modules.resourceindicatorlist.entity.ResourceIndicatorlist;
 import com.jeeplus.modules.resourceindicatorlist.mapper.ResourceIndicatorlistMapper;
 import com.jeeplus.modules.resourceindicatorlist.service.ResourceIndicatorlistService;
+import com.jeeplus.modules.topoline.service.TopoLineService;
 import com.jeeplus.modules.toposymbols.entity.TopoSymbols;
 import com.jeeplus.modules.toposymbols.mapper.TopoSymbolsMapper;
+import com.jeeplus.modules.toposymbols.service.TopoSymbolsService;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -78,7 +80,11 @@ public class ResourceService extends CrudService<ResourceMapper, Resource> {
 	private LinkIndicatorService linkIndicatorService;
 
 	@Autowired
-	private TopoSymbolsMapper topoSymbolsMapper;
+	private TopoSymbolsService topoSymbolsService;
+
+	@Autowired
+	private TopoLineService topoLineService;
+
 
 
 	@Autowired
@@ -188,14 +194,19 @@ public class ResourceService extends CrudService<ResourceMapper, Resource> {
 		//topoSymbolsMapper.insert(topoSymbols);
 	}
 
-
 	@Transactional(readOnly = false)
 	public void delete(Resource resource) {
 		if(resource.getResourceBaseInfo()!=null){
 			resourceBaseInfoService.delete(new ResourceBaseInfo(resource.getResourceBaseInfo().getId()));
 		}
+		resourceExceptionService.delByResourceId(resource.getId());
 		linkIndicatorService.delByResource(resource.getId());
 		networkInterfaceService.delByResourceId(resource.getId());
+		resourceIndicatorlistService.delByResourceId(resource.getId());
+		topoLineService.delByResourceId(resource.getId());
+		topoSymbolsService.delByResourceId(resource.getId());
+		resourceGatherItemService.delByResourceId(resource.getId());
+		resourceIndicatorlistMapper.delByResourceId(resource.getId());
 		super.delete(resource);
 	}
 
@@ -318,6 +329,12 @@ public class ResourceService extends CrudService<ResourceMapper, Resource> {
 		return resourceBaseInfoMapper.updateResourceRdcommunity(id,rdcommunity);
 	}
 
+
+	@Transactional(readOnly = false)
+	public int updateResourceIp ( String  id, String  ip ){
+		return resourceMapper.updateResourceIp(id,ip);
+	}
+
 	/**
 	 * 设置资源指标模板
 	 * @param id
@@ -381,10 +398,6 @@ public class ResourceService extends CrudService<ResourceMapper, Resource> {
 	}
 
 
-
-
-
-
 	/**
 	 * 根据时间段获取健康度列表
 	 * @param resourceId
@@ -393,7 +406,6 @@ public class ResourceService extends CrudService<ResourceMapper, Resource> {
 	public List<HealthDegree> findHealthDegreeListDate( String resourceId,Date beginDate, Date endDate) {
 		return resourceMapper.findHealthDegreeListDate(resourceId,beginDate,  endDate);
 	}
-
 
 	/**
 	 * 根据时间段获取健康度总数

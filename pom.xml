@@ -109,7 +109,7 @@
 
 
     <build>
-        <finalName>jeeplus</finalName>
+        <finalName>web</finalName>
         <resources>
 			<resource>
 				<directory>src/main/java</directory>
@@ -870,17 +870,20 @@
 
 
 
-
-
-
-
-
         <dependency>
+            <groupId>org.snmp4j</groupId>
+            <artifactId>snmp4j</artifactId>
+            <version>2.6.2</version>
+        </dependency>
+
+
+
+    <!--    <dependency>
             <groupId>org.snmp4j</groupId>
             <artifactId>snmp4j</artifactId>
             <version>1.10.1</version>
         </dependency>
-
+-->
 
         <!-- UTILS end -->
     </dependencies>

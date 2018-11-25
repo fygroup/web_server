@@ -127,7 +127,7 @@ public class MemoryIndicatorCalculateWindows {
                 temList.add(temMap);
             }
 
-             // System.out.println("result：" + temList.toString());
+              System.out.println("result：" + temList.toString());
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -152,7 +152,7 @@ public class MemoryIndicatorCalculateWindows {
         if (response.getResponse() == null) {
             return;
         } else {
-            Vector<VariableBinding> recVBs = response.getResponse()
+            Vector<VariableBinding> recVBs = (Vector<VariableBinding>)response.getResponse()
                     .getVariableBindings();
             String oid = recVBs.elementAt(0).getOid().toString();
             if (endOid.equals(oid)) {
@@ -269,7 +269,7 @@ public class MemoryIndicatorCalculateWindows {
      */
     public static void main(String[] args) throws Exception {
         try {
-            getVirtualPhysicalMemory("192.168.1.231", "leo","161", "500", "4",1);
+            getVirtualPhysicalMemory("192.168.1.253", "public","161", "500", "4",1);
             //System.out.println(CpuIndicatorCalculateLinux.getCpuUse().get("cpuLoad").toString().equals("-1"));
         } catch (Exception e) {
             e.printStackTrace();

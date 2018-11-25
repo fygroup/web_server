@@ -8,7 +8,7 @@
 					levels: 5,
 		            onNodeSelected: function(event, treeNode) {
 		            	var id = treeNode.id == '0' ? '' :treeNode.id;
-						if(treeNode.level == 1){//level=0 代表公司
+						if(treeNode.level == 1){//level=0 代表法院
 							$("#companyId").val(id);
 							$("#companyName").val(treeNode.text);
 							$("#officeId").val("");
@@ -107,7 +107,7 @@
 				        sortable: true
 				    }, {
 				        field: 'company.name',
-				        title: '归属公司'
+				        title: '归属法院'
 				    }, {
 				        field: 'office.name',
 				        title: '归属部门'

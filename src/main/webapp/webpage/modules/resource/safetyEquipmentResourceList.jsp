@@ -40,9 +40,6 @@
 	<div class="panel-body">
 		<sys:message content="${message}"/>
 
-
-
-
 	
 	<!-- 搜索 -->
 	<div class="accordion-group">

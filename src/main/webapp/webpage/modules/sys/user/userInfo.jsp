@@ -145,7 +145,7 @@
 													<td>${user.phone}</td>
 												</tr>
 												<tr>
-													<td><strong>公司</strong></td>
+													<td><strong>法院</strong></td>
 													<td>${user.company.name}</td>
 												</tr>
 												<tr>

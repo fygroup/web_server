@@ -35,6 +35,8 @@ public interface ResourceIndicatorlistMapper extends BaseMapper<ResourceIndicato
 
     void delById(@Param(value = "id")  String id);
 
+    void delByResourceId(@Param(value = "id")  String id);
+
      ResourceIndicatorlist findResourceIndicator( @Param(value = "resourceId")String resourceId,@Param(value = "indicatorId")String indicatorId);
 
     List<ResourceIndicatorlist> getUpdateList(@Param(value = "resourceId")String resourceId,@Param(value = "resourceTypeId")String resourceTypeId,@Param(value = "operatingSystemid")String operatingSystemid,@Param(value = "type")String type);

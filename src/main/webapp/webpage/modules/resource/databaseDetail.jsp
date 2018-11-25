@@ -573,7 +573,7 @@
 				<tr>
 					<td class="tit">名称</td><td class="td-hover"><a type="button" class="" data-toggle="modal" data-target="#informationNameEdit" class="btn edit tableEdit" id="resourceNameSection">${resource.name}</a></td>
 					<td class="tit">资源类型</td><td class="td-hover">${resource.resourceType.name}</td>
-					<td class="tit">归属公司</td><td class="td-hover">${resource.company.name}</td>
+					<td class="tit">归属法院</td><td class="td-hover">${resource.company.name}</td>
 				</tr>
 				<tr>
 					<td class="tit">管理IP</td><td class="td-hover">${resource.ip}</td>

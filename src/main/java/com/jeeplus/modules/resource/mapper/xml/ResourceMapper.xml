@@ -304,6 +304,11 @@
 		SELECT img FROM resource WHERE id= #{resourceId}
 	</select>
 
+
+	<select id="getResourceName" resultType="String" >
+		SELECT name FROM resource WHERE id= #{resourceId}
+	</select>
+
 	<update id="updateResourceImg">
 		UPDATE resource SET img = #{img} WHERE id = #{resourceId}
 	</update>
@@ -373,6 +378,14 @@
 	</select>
 
 
+
+	<update id="updateResourceIp">
+		UPDATE resource SET
+		ip = #{ip}
+		WHERE id = #{id}
+	</update>
+
+
 	<select id="getCollectorList" resultType="MokaCollector" >
 		SELECT
 		a.id AS "id",
@@ -428,7 +441,7 @@
 		a.resource_id AS "resourceId",
 		a.availability_rate AS "availabilityRate"
 		FROM availability_rate a
-		WHERE a.resource_id = #{resourceId}  ORDER BY a.create_date ASC
+		WHERE a.resource_id = #{resourceId}  ORDER BY a.create_date DESC
 	</select>
 
 
@@ -482,7 +495,7 @@
 		a.resource_id AS "resourceId",
 		a.health_degree AS "healthDegree"
 		FROM health_degree a
-		WHERE a.resource_id = #{resourceId}  ORDER BY a.create_date ASC
+		WHERE a.resource_id = #{resourceId}  ORDER BY a.create_date desc
 	</select>
 
 

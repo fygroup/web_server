@@ -76,7 +76,7 @@ $(document).ready(function() {
 		        sortable: true,
 		    }, {
 		        field: 'createBy.company.name',
-		        title: '所在公司',
+		        title: '所在法院',
 		        sortable: true
 		    }, {
 		        field: 'createBy.office.name',

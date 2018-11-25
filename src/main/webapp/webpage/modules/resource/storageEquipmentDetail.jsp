@@ -198,6 +198,18 @@
         
 		$(document).ready(function() {
 
+            $.ajax({
+                type: "POST",
+                url: '${ctx}/tools/TwoDimensionCodeController/myCreateTwoDimensionCode.do',
+                data: {resourceId:$("#resourceId").val(),tm:new Date().getTime()},
+                dataType:'json',
+                cache: false,
+                success: function(data){
+                    if(data.success){
+                        $("#encoderImgId").attr("src",data.body.filePath);
+                    }
+                }
+            });
 
             initNetworkInterfaceListView();
 
@@ -1354,6 +1366,9 @@
 	<label for="tab4">故障列表</label>
 
 	<section id="monitor" style="padding-top:0;">
+
+		<img id="encoderImgId" cache="false" style="margin-left: 20px;margin-top: 10px;"  width="150px" height="150px;"  class="block"/>
+
 		<%--<div style="background: #fff;">
 			<div id="monitorTop1">
 			</div>
@@ -1393,7 +1408,7 @@
 				<tr>
 					<td class="tit">名称</td><td class="td-hover" id="resourceNameSection">${resource.name}</td>
 					<td class="tit">资源类型</td><td class="td-hover">${resource.resourceType.name}</td>
-					<td class="tit">归属公司</td><td class="td-hover">${resource.company.name}</td>
+					<td class="tit">归属法院</td><td class="td-hover">${resource.company.name}</td>
 				</tr>
 				<tr>
 					<td class="tit">管理IP</td><td class="td-hover">${resource.ip}</td>

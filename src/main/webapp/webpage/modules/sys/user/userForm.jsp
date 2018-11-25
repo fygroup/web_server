@@ -69,9 +69,9 @@
 		         <td class="width-15 active">	<label class="pull-right"><font color="red">*</font>头像：</label></td>
 		         <td class="width-35"><form:hidden id="nameImage" path="photo" htmlEscape="false" maxlength="255" class="input-xlarge"/>
 						<sys:ckfinder input="nameImage" type="images" uploadPath="/photo" selectMultiple="false" maxWidth="100" maxHeight="100"/></td>
-		         <td  class="width-15 active">	<label class="pull-right"><font color="red">*</font>归属公司:</label></td>
+		         <td  class="width-15 active">	<label class="pull-right"><font color="red">*</font>归属法院:</label></td>
 		         <td class="width-35"><sys:treeselect id="company" name="company.id" value="${user.company.id}" labelName="company.name" labelValue="${user.company.name}"
-						title="公司" url="/sys/office/treeData?type=1" allowClear="true" cssClass="form-control required"/></td>
+						title="法院" url="/sys/office/treeData?type=1" allowClear="true" cssClass="form-control required"/></td>
 		      </tr>
 
 		      <tr>

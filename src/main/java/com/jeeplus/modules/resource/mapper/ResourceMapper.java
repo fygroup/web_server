@@ -18,6 +18,8 @@ import java.util.List;
 @MyBatisMapper
 public interface ResourceMapper extends BaseMapper<Resource> {
 
+    int updateResourceIp (@Param(value = "id") String  id, @Param(value = "ip") String  ip );
+
     int setMac(@Param(value = "mac") String mac,@Param(value = "id") String id);
 
     void saveResponseTime (@Param(value = "responseTime") ResponseTime responseTime);
@@ -59,6 +61,7 @@ public interface ResourceMapper extends BaseMapper<Resource> {
     List<HealthDegree> findHealthDegreeListDate(@Param(value = "resourceId") String resourceId, @Param(value = "beginDate") Date beginDate , @Param(value = "endDate") Date endDate );
 
 
+
     String findHealthDegreeListDateTotal(@Param(value = "resourceId") String resourceId, @Param(value = "beginDate") Date beginDate , @Param(value = "endDate") Date endDate );
 
 
@@ -71,5 +74,8 @@ public interface ResourceMapper extends BaseMapper<Resource> {
     List<MokaCollector> getCollectorList();
 
     MokaCollector getCollector(@Param(value = "id") String id);
+
+    String getResourceName (@Param(value = "resourceId") String  resourceId );
+
 
 }

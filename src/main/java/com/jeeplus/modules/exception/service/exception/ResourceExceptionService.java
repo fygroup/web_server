@@ -15,6 +15,7 @@ import com.jeeplus.modules.oa.service.OaIssueReturnService;
 import com.jeeplus.modules.resource.service.ResourceService;
 import com.jeeplus.modules.resourcephysicinfo.entity.ResourcePhysicInfo;
 import com.jeeplus.modules.resourcephysicinfo.service.ResourcePhysicInfoService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -216,6 +217,11 @@ public class ResourceExceptionService extends CrudService<ResourceExceptionMappe
 	}
 
 
+	public List<ResourceException> findEListByResource(String resourceId,String exceptionClass){
+		return resourceExceptionMapper.findEListByResource(resourceId,exceptionClass);
+	}
+
+
 
 	/**
 	 * 根据资源和时间段查询异常
@@ -236,4 +242,8 @@ public class ResourceExceptionService extends CrudService<ResourceExceptionMappe
 		return resourceExceptionMapper.indexFindList();
 	}
 
+
+	public void delByResourceId( String  resourceId){
+		resourceExceptionMapper.delByResourceId(resourceId);
+	}
 }

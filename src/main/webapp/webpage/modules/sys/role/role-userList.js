@@ -38,7 +38,7 @@ $(document).ready(function() {
 			        }
 			    },{
 			        field: 'company.name',
-			        title: '归属公司'
+			        title: '归属法院'
 			       
 			    }, {
 			        field: 'office.name',

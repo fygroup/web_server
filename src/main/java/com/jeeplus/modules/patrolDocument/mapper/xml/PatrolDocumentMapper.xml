@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.patrolDocument.mapper.PatrolDocumentMapper">
+
+	<sql id="patrolDocumentColumns">
+		a.id AS "id",
+	    a.name AS "name",
+	    a.type AS "type",
+	    a.document_urls AS "documentUrls",
+		a.create_by AS "createBy.id",
+		a.create_date,
+		a.update_by AS "updateBy.id",
+		a.update_date,
+		a.del_flag AS "delFlag",
+		a.status AS "status",
+		a.delete_by AS "deleteBy",
+		a.delete_date AS "deleteDate",
+		a.remarks,
+		a.td_flag AS "tdFlag",
+		a.patrolId as "patrolId",
+        createBy.name AS "createBy.name",
+        updateBy.name AS "updateBy.name",
+        deleteBy.name AS "deleteBy.name"
+	</sql>
+
+	<sql id="patrolDocumentJoins">
+		LEFT JOIN sys_user createBy ON createBy.id = a.create_by
+		LEFT JOIN sys_user updateBy ON updateBy.id = a.update_by
+		LEFT JOIN sys_user deleteBy ON deleteBy.id = a.delete_by
+	</sql>
+
+
+	<select id="get" resultType="PatrolDocument" >
+		SELECT
+		<include refid="patrolDocumentColumns"/>
+		FROM patrol_document a
+		<include refid="patrolDocumentJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findList" resultType="PatrolDocument">
+		SELECT
+		<include refid="patrolDocumentColumns"/>
+		FROM patrol_document a
+		<include refid="patrolDocumentJoins"/>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+		<if test="name != null and name != ''">
+			AND a.name LIKE
+			<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+			<if test="dbName == 'mysql'">CONCAT('%', #{name}, '%')</if>
+		</if>
+		<if test="patrolId != null and patrolId != ''">
+			AND a.patrolId = #{patrolId}
+		</if>
+		<if test="createDate != null and createDate != ''">
+			AND date_format(a.create_date,'%Y-%m-%d') LIKE CONCAT('%',date_format(#{createDate},'%Y-%m-%d'),'%')
+		</if>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PatrolDocument">
+		SELECT 
+			* 
+		FROM patrol_document
+		WHERE del_flag = #{DEL_FLAG_NORMAL} 
+		ORDER BY update_date DESC
+	</select>
+	
+	<select id="findTypeList" resultType="string">
+		SELECT 
+
+		FROM patrol_document
+		WHERE del_flag = #{DEL_FLAG_NORMAL} 
+
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO patrol_document(
+			id, 
+			name,
+			type, 
+			document_urls,
+			del_flag,
+			td_flag,
+			create_by,
+			create_date, 
+			update_by, 
+			update_date,
+			status,
+			remarks,
+			patrolId
+		) VALUES (
+			#{id}, 
+			#{name},
+			#{type},
+			#{documentUrls},
+			#{delFlag},
+			#{tdFlag},
+			#{createBy.id}, 
+			#{createDate}, 
+			#{updateBy.id}, 
+			#{updateDate},
+			#{status},
+			#{remarks},
+			#{patrolId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE patrol_document SET
+			name = #{name},
+			type = #{type},
+			document_urls = #{documentUrls},
+			del_flag = #{delFlag},
+			remarks = #{remarks},
+			status = #{status},
+			td_flag =  #{tdFlag},
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}, 
+			remarks = #{remarks},
+			patrolId = #{patrolId}
+		WHERE id = #{id}
+	</update>
+
+
+
+	<update id="updateStatus">
+		UPDATE patrol_document SET status = #{status} WHERE id = #{id}
+	</update>
+
+	
+	<!--<update id="delete">-->
+		<!--DELETE FROM templet_document-->
+		<!--WHERE id = #{id}-->
+	<!--</update>-->
+
+	<update id="delete">
+		UPDATE patrol_document SET
+			del_flag = #{DEL_FLAG_DELETE}, delete_by = #{deleteBy}, delete_Date = #{deleteDate}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="deleteByLogic">
+		UPDATE patrol_document SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+</mapper>

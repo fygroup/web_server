@@ -237,6 +237,13 @@
 	</update>
 
 
+	<update id="delByResourceId">
+		DELETE FROM topo_symbols
+		WHERE object_id = #{resourceId}
+	</update>
+
+
+
 	<update id="deleteSymbolsLinkLine">
 		DELETE FROM topo_line
 		WHERE src_symbol = #{id} OR dst_symbol = #{id}

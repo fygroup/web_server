@@ -32,7 +32,7 @@ public class Resource extends DataEntity<Resource> {
 	private String middlewareIp;		// 中间件IP
 	private String mac;		// mac地址
 	private String subnetmask;		// 子网掩码
-	private Office company;		// 归属公司
+	private Office company;		// 归属法院
 	private String description;
 	private String sysOid;     //系统oid
 	private ResourceBaseInfo resourceBaseInfo;
@@ -254,7 +254,7 @@ public class Resource extends DataEntity<Resource> {
 	}
 
 	
-	@ExcelField(title="归属公司", fieldType=String.class, value="", align=2, sort=17)
+	@ExcelField(title="归属法院", fieldType=String.class, value="", align=2, sort=17)
 	public Office getCompany() {
 		return company;
 	}

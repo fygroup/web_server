@@ -23,8 +23,9 @@ public interface TopoSymbolsMapper extends BaseMapper<TopoSymbols> {
      TopoSymbols getSymbolWithResourceIdAndTopoViewId(@Param(value = "resourceId")String resourceId, @Param(value = "viewId")String viewId);
      void deleteSymbolsLinkLine(@Param(value = "id")String id);
 
-
     List<TopoSymbols> findListByUser(@Param(value = "userId") String userId,@Param(value = "topoVIewId") String topoVIewId);
 
     List<TopoSymbols> getList(@Param(value = "topoSymbols") TopoSymbols topoSymbols);
+
+    void delByResourceId(@Param(value = "resourceId") String resourceId);
 }

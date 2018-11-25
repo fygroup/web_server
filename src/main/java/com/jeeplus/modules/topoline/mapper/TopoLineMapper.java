@@ -22,6 +22,8 @@ public interface TopoLineMapper extends BaseMapper<TopoLine> {
 
     int delByViewId(@Param(value = "viewId") String viewId);
 
+    void delByResourceId(@Param(value = "resourceId") String resourceId);
+
     List<TopoLine> lineIdsByClass(@Param(value = "viewId") String viewId);
     int checkLinkExist(@Param(value = "viewId") String viewId,@Param(value = "objectId") String objectId);
 }

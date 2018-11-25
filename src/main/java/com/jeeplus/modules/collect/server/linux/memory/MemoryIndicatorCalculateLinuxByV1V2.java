@@ -203,7 +203,7 @@ public class MemoryIndicatorCalculateLinuxByV1V2 {
         if (response.getResponse() == null) {
             return;
         } else {
-            Vector<VariableBinding> recVBs = response.getResponse()
+            Vector<VariableBinding> recVBs = (Vector<VariableBinding>)response.getResponse()
                     .getVariableBindings();
             String oid = recVBs.elementAt(0).getOid().toString();
             if (endOid.equals(oid)) {
@@ -247,7 +247,7 @@ public class MemoryIndicatorCalculateLinuxByV1V2 {
         if (response.getResponse() == null) {
             return;
         } else {
-            Vector<VariableBinding> recVBs = response.getResponse()
+            Vector<VariableBinding> recVBs = (Vector<VariableBinding>)response.getResponse()
                     .getVariableBindings();
             String oid = recVBs.elementAt(0).getOid().toString();
             if (endOid.equals(oid)||endOid2.equals(oid)) {
@@ -368,7 +368,7 @@ public class MemoryIndicatorCalculateLinuxByV1V2 {
      */
     public static void main(String[] args) throws Exception {
         try {
-            getVirtualPhysicalMemory("139.1.1.52", "public","161", "500", "4",1);
+            getVirtualPhysicalMemory("192.168.1.245", "le","161", "500", "4",1);
             //System.out.println(CpuIndicatorCalculateLinux.getCpuUse().get("cpuLoad").toString().equals("-1"));
         } catch (Exception e) {
             e.printStackTrace();

@@ -136,7 +136,42 @@
 	</select>
 
 
+	<select id="findEListByResource" resultType="ResourceException" >
+		SELECT
+		a.id AS "id",
+		a.create_date AS "createDate",
+		a.update_date AS "updateDate",
+		a.exception_source AS "exceptionSource",
+		a.indicator_name AS "indicatorName",
+		a.total_quantity AS "totalQuantity",
+		(select label from  sys_dict_value where dict_type_id='b086ef09eefb46d99f90dee23b7d66db' and value=a.exception_class ) AS "exceptionClass",
+		a.current_value AS "currentValue",
+		a.current_status AS "currentStatus",
+		a.first_trigger_value AS "firstTriggerValue",
+		a.first_trigger_class AS "firstTriggerClass",
+		a.first_trigger_time AS "firstTriggerTime",
+		a.resource_indicator_list_id AS "resourceIndicator.id",
+		a.last_trigger_time AS "lastTriggerTime",
+		a.resource_type_id AS "resourceType.id",
+		a.event_type AS "eventType",
+		a.confirm_status AS "confirmStatus",
+		a.confirm_user_id AS "confirmUser.id",
+		a.office_id AS "office.id",
+		a.indicator_id AS "indicatorItem.id"
+		FROM resource_exception a
+		LEFT JOIN resource_indicator_list resourceIndicator ON resourceIndicator.id = a.resource_indicator_list_id
+		LEFT JOIN resource_type resourceType ON resourceType.id = a.resource_type_id
+		LEFT JOIN sys_user confirmUser ON confirmUser.id = a.confirm_user_id
+		LEFT JOIN sys_office office ON office.id = a.office_id
+		LEFT JOIN indicator indicatorItem ON indicatorItem.id = a.indicator_id
+		WHERE  a.current_status = '0' AND resourceIndicator.resource_id = #{resourceId}
 
+		<if test="exceptionClass != null and exceptionClass != ''">
+			AND a.exception_class = #{exceptionClass}
+		</if>
+		ORDER BY a.create_date DESC
+
+	</select>
 
 
 	<select id="findListByResourceDate" resultType="ResourceException" >
@@ -298,6 +333,12 @@
 	<update id="delete">
 		DELETE FROM resource_exception
 		WHERE id = #{id}
+	</update>
+
+
+	<update id="delByResourceId">
+		DELETE FROM resource_exception
+		WHERE resource_indicator_list_id in (select id from  resource_indicator_list where resource_id = #{resourceId})
 	</update>
 
 

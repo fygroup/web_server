@@ -122,6 +122,14 @@
 		DELETE FROM resource_gather_item
 		WHERE id = #{id}
 	</update>
+
+
+
+	<update id="delByResourceId">
+		DELETE FROM resource_gather_item
+		WHERE resource_id = #{resourceId}
+	</update>
+
 	
 	<!--逻辑删除-->
 	<update id="deleteByLogic">

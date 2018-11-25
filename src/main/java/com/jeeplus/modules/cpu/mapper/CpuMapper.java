@@ -37,6 +37,11 @@ public interface CpuMapper extends BaseMapper<Cpu> {
 
     String findTotalUsedRateListOfTime (@Param(value = "resourceId") String  resourceId , @Param(value = "beginDate") Date beginDate , @Param(value = "endDate") Date endDate );
 
+    String findCpuUsedRate (@Param(value = "resourceId") String  resourceId);
+
+
+    String findCpuUsedRateNew (@Param(value = "resourceId") String  resourceId);
+
 
     List<CpuUsedRate> getCpuPanorama();
 

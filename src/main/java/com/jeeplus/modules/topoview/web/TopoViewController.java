@@ -341,6 +341,7 @@ public class TopoViewController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value = "topoResouceInfo")
 	public AjaxJson topoResouceInfo(String topoViewId ) {
+		Long start=System.currentTimeMillis();
 		Date now=new Date();
 		AjaxJson ajaxJson=new AjaxJson();
 		TopoSymbols initTopoSymbols=new TopoSymbols();
@@ -363,6 +364,7 @@ public class TopoViewController extends BaseController {
 				}
 			}
 		}
+
 		Map<String,List<TopoSymbolsResource>> resultMap=new HashedMap();
 		for (Map.Entry<String,List<Resource>> entry : resourceMap.entrySet()) {
 			List<Resource> list=entry.getValue();
@@ -390,8 +392,11 @@ public class TopoViewController extends BaseController {
 					if(cpuUsedRate!=null){
 						topoSymbolsResource.setCpuRate(cpuUsedRate.getUsedRate());
 					}
-
 					Map<String,String> map=new HashedMap();
+
+
+
+
 					if("1".equals(resource.getResourceType().getParent().getCode())||"2".equals(resource.getResourceType().getParent().getCode())||"6".equals(resource.getResourceType().getParent().getCode())){
 
 						if(memoryUsedRate!=null){
@@ -402,8 +407,8 @@ public class TopoViewController extends BaseController {
 							topoSymbolsResource.setCpuRate(cpuUsedRate.getUsedRate());
 							map.put("cpuRate",cpuUsedRate.getUsedRate());
 						}
-
-						ResponseTime responseTime=resourceService.getTopResponseTime(resource.getId());
+						/*ResponseTime responseTime=resourceService.getTopResponseTime(resource.getId());*/
+						ResponseTime responseTime=null;
 						if(responseTime!=null){
 							map.put("icmp",responseTime.getTime());
 						}
@@ -419,6 +424,7 @@ public class TopoViewController extends BaseController {
 
 							}
 						}
+
 					}else if("5".equals(resource.getResourceType().getParent().getCode())){
 						/*List<ResourceIndicatorlist> indicatorList =  resourceIndicatorlistService.getUpdateListByCode(resource.getId(),resource.getResourceType().getId(),"5");
 						if(CheckObject.checkList(indicatorList)){
@@ -434,9 +440,18 @@ public class TopoViewController extends BaseController {
 							}
 						}
 					}*/
+
+
+
+
+
+
+
+
 					topoSymbolsResource.setIndicators(map);
 					result.add(topoSymbolsResource);
 				}
+
 
 				List<TopoLine> lines=topoLineService.lineIdsByClass(entry.getKey());
 				if(CheckObject.checkList(list)){
@@ -456,6 +471,7 @@ public class TopoViewController extends BaseController {
 				resultMap.put(entry.getKey(),result);
 			}
 		}
+		System.out.println(" topoView finished "+(System.currentTimeMillis()-start));
 		ajaxJson.setSuccess(true);
 		ajaxJson.put("data",resultMap);
 		return ajaxJson;

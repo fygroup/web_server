@@ -68,4 +68,9 @@ public class TopoLineService extends CrudService<TopoLineMapper, TopoLine> {
 	public int checkLinkExist(String viewId, String objectId){
 		return topoLineMapper.checkLinkExist(viewId,objectId);
 	}
+
+	@Transactional(readOnly = false)
+	public void delByResourceId( String resourceId){
+		topoLineMapper.delByResourceId(resourceId);
+	}
 }

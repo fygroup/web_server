@@ -159,7 +159,7 @@ public class OfficeController extends BaseController {
 	/**
 	 * 获取机构JSON数据。
 	 * @param extId 排除的ID
-	 * @param type	类型（1：公司；2：部门/小组/其它）
+	 * @param type	类型（1：法院；2：部门/小组/其它）
 	 * @param grade 显示级别
 	 * @param response
 	 * @return

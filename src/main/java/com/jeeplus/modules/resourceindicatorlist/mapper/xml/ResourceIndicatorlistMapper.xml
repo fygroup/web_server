@@ -279,6 +279,15 @@
 	</update>
 
 
+	<update id="delByResourceId">
+		DELETE FROM resource_indicator_list
+		WHERE resource_id = #{id}
+	</update>
+
+
+
+
+
 	<!--插入操作前删除不在当前指标里的数据-->
 	<update id="delByIndicatorIds">
 		DELETE FROM resource_indicator_list WHERE resource_id = #{resourceId} AND indicator_id NOT IN (#{ids})

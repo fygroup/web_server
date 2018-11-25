@@ -146,6 +146,19 @@
 					<form:input path="ip" htmlEscape="false" id="ip"   class="form-control required"/>
 				</div>
 			</div>
+
+
+			<div class="form-group" >
+				<label class="col-sm-2 control-label"><font color="red">*</font>所属采集器：</label>
+				<div class="col-sm-8">
+					<select name="mokaCollector.id"  class="form-control required" >
+						<c:forEach items="${mokaCollectorList}" var="item" varStatus="index">
+							<option value="${item.id}" <c:if test="${item.id == mokaCollector.id}"> selected="selected"</c:if>>${item.name}</option>
+						</c:forEach>
+					</select>
+				</div>
+			</div>
+
 			<div class="form-group">
 				<label class="col-sm-2 control-label"><font color="red">*</font>应用Url：</label>
 				<div class="col-sm-8">

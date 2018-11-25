@@ -185,12 +185,24 @@
 
 	<script type="text/javascript">
 
-
         document.oncontextmenu = function() {
             return false;
         }
 
 		$(document).ready(function() {
+            $.ajax({
+                type: "POST",
+                url: '${ctx}/tools/TwoDimensionCodeController/myCreateTwoDimensionCode.do',
+                data: {resourceId:$("#resourceId").val(),tm:new Date().getTime()},
+                dataType:'json',
+                cache: false,
+                success: function(data){
+                    if(data.success){
+                        $("#encoderImgId").attr("src",data.body.filePath);
+                    }
+                }
+            });
+
             initNetworkInterfaceListView();
             $.ajax({
                 type : 'GET',
@@ -1051,6 +1063,8 @@
 	<section id="monitor" style="padding-top:0;">
 		<div class="fixed-table-body">
 
+			<img id="encoderImgId" cache="false" style="margin-left: 20px;margin-top: 10px;"  width="150px" height="150px;"  class="block"/>
+
 			<%--背板信息 view --%>
 			 ${backplaneView}
 		</div>
@@ -1086,10 +1100,12 @@
 				<tr>
 					<td class="tit">名称</td><td class="td-hover" id="resourceNameSection">${resource.name}</td>
 					<td class="tit">资源类型</td><td class="td-hover">${resource.resourceType.name}</td>
-					<td class="tit">归属公司</td><td class="td-hover">${resource.company.name}</td>
+					<td class="tit">归属法院</td><td class="td-hover">${resource.company.name}</td>
 				</tr>
 				<tr>
-					<td class="tit">管理IP</td><td class="td-hover">${resource.ip}</td>
+					<td class="tit">管理IP</td>
+					<td class="td-hover" > <a type="button" class="" data-toggle="modal" data-target="#informationIpEdit" class="btn edit tableEdit" id="resourceIpSection">${resource.ip}</a></td>
+
 					<td class="tit">端口</td><td class="td-hover">${resource.resourceBaseInfo.port}</td>
 					<td class="tit">读共同体</td><td class="td-hover" id="resourceRdcommunitySection">${resource.resourceBaseInfo.rdcommunity}</td>
 
@@ -1163,7 +1179,29 @@
 			</div>
 
 
-			<script>
+		<div class="modal inmodal" id="informationIpEdit" tabindex="-1" role="dialog" aria-hidden="true" >
+			<div class="modal-dialog" style="width:400px;">
+				<div class="modal-content animated bounceInRight" style="width:400px;">
+					<div class="modal-body" style="width:100%">
+						<div  style="width:100%;height:120px">
+							<h4>编辑Ip</h4>
+							<div style="margin-top: 32px;text-align: center">
+								<input id="informationResourceIp" value="${resource.ip}" class=" form-control">
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-white"  data-dismiss="modal" onclick="saveResourceIp()" >保存</button>
+						<button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+
+
+		<script>
                 function addIndicator() {
                     var url='${ctx}/indicator/indicator/showIndicatorList?resourceId='+$("#resourceId").val();             //转向网页的地址;
                     var name='添加指标';                  //网页名称，可为空;
@@ -1430,6 +1468,32 @@
                 window.open(url, name, 'height='  + iHeight + ',width=' + iWidth + ',status=no,toolbar=no,menubar=no,location=no,resizable=no,scrollbars=0,titlebar=no');
             }
 
+
+
+
+            function saveResourceIp() {
+                if($("#informationResourceIp").val().trim().length==0){
+                    return;
+                }
+
+                $.ajax({
+                    type : 'POST',
+                    timeout:10*1000,    //超时时间 10s
+                    url :  "${ctx}/resource/resource/updateResourceIp",
+                    data : { resourceId: $("#resourceId").val(), ip : $("#informationResourceIp").val()},
+                    success : function(result) {
+                        if(result){
+                            $("#resourceIpSection").html($("#informationResourceIp").val());
+                            window.opener.myRefresh();
+                        }else{
+                            alert("保存失败");
+                        }
+                    },
+                    error:function(){
+                    }
+                });
+            }
+
 		</script>
 
 	</section>
@@ -1528,6 +1592,15 @@
 		</div>
 
 
+
+
+
+
+
+
+
+
+
 		<script>
             function saveResourceName() {
                 if($("#informationResourceName").val().trim().length==0){
@@ -1577,6 +1650,12 @@
                     }
                 });
             }
+
+
+
+
+
+
 
 
 		</script>

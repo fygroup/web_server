@@ -31,6 +31,7 @@ public class MemoryIndicatorCalculateWindowsByV1V2 {
      *
      */
     public static List<Map<String, Object>> getVirtualPhysicalMemory(String ip, String community, String port, String timeout, String retries,int version) {
+        System.out.println(ip+" "+community+" "+port+" "+timeout);
         List<Map<String, Object>> temList = new ArrayList<Map<String, Object>>();
         try{
             target= SnmpUtil.getCommunityTarget( ip,  community,  port,  timeout,  retries, version);
@@ -155,8 +156,11 @@ public class MemoryIndicatorCalculateWindowsByV1V2 {
         if (response.getResponse() == null) {
             return;
         } else {
-            Vector<VariableBinding> recVBs = response.getResponse()
+            Vector<VariableBinding> recVBs = (Vector<VariableBinding>) response.getResponse()
                     .getVariableBindings();
+        /*    if (recVBs.size()==0) {
+                return;
+            }*/
             String oid = recVBs.elementAt(0).getOid().toString();
             if (endOid.equals(oid)) {
                 return;
@@ -272,7 +276,7 @@ public class MemoryIndicatorCalculateWindowsByV1V2 {
      */
     public static void main(String[] args) throws Exception {
         try {
-            getVirtualPhysicalMemory("139.0.2.53", "ding","161", "500", "4",1);
+            getVirtualPhysicalMemory("192.168.1.245", "le","161", "500", "4",1);
             //System.out.println(CpuIndicatorCalculateLinux.getCpuUse().get("cpuLoad").toString().equals("-1"));
         } catch (Exception e) {
             e.printStackTrace();

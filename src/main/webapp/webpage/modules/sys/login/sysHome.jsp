@@ -96,7 +96,7 @@
 											</tr>
 											</thead>
 											<tbody id="getExceptionList">
-											<tr>
+											<%--<tr>
 												<td>异常名称</td>
 												<td>来源来源</td>
 												<td>严重</td>
@@ -115,7 +115,7 @@
 													<a class="operate-icon operate delet" href="#" title="设置"><i class="fa fa-cog"></i></a>
 													<a class="operate-icon operate delet" href="#" title="删除"><i class="fa fa-trash"></i></a>
 												</td>
-											</tr>
+											</tr>--%>
 											</tbody>
 										</table>
 									</div>
@@ -388,6 +388,8 @@
             result=result["list"];
 				var html = "";
 				$("#indicatorsList").html(html);
+            //console.log("==================");
+            //console.log(result);
 				for (var i = 0; i < result.length; i++) {
 				    var value="-";
 				    if(result[i].value){
@@ -395,6 +397,7 @@
                     }
 					html = html + "<tr><td>" + result[i].resource.name + "</td><td>" + result[i].indicator.name + "</td><td>" + value  + "</td></tr>";
 				}
+            //console.log(html);
 				$("#indicatorsList").html(html);
 		},
 		error:function(){
@@ -453,6 +456,9 @@
 		success : function(result) {
             var html = "";
             exceptionData = result;
+            console.log("==================");
+            console.log(result);
+
 			for (var i = 0; i < exceptionData.length; i++) {
 				html = html + "<tr><td><a type='button' data-toggle='modal' data-target='#exceptionDetail'> <b onclick='showExceptionDetail("+i+")'>" + exceptionData[i].ename + "<b></a></td><td>"+ exceptionData[i].efrom +"</td><td>" + exceptionData[i].eclass + "</td>" +
 					"<td><a class='' href='#' title='手动恢复' onclick='manualValidation(this)' attr-data='"+exceptionData[i].id+"' attr-data='"+exceptionData[i].estatus+"'><i class='fa fa-undo btn-lg'></i></a>\n" +

@@ -91,7 +91,7 @@
     <description>获取当前时间与指定时间的差值</description>
     <name>getTime</name>
     <function-class>com.jeeplus.modules.sys.utils.UserUtils</function-class>
-    <function-signature>java.util.Date getTime(java.util.Date)</function-signature>
+    <function-signature>java.lang.String getTime(java.util.Date)</function-signature>
     <example>${fns:getTime(java.util.Date)}</example>  
   </function>
   <function>
@@ -172,7 +172,7 @@
     <description>获取对象的属性值</description>
     <name>getValue</name>
     <function-class>com.jeeplus.modules.sys.utils.DictUtils</function-class>
-    <function-signature>java.lang.String getValue(java.lang.Object, java.lang.String)</function-signature>
+    <function-signature>java.lang.Object getValue(java.lang.Object, java.lang.String)</function-signature>
     <example>${fns:getValue(obj, name)}</example>  
   </function>
   

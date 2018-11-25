@@ -182,7 +182,7 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="col-sm-2 control-label"><font color="red">*</font>归属公司：</label>
+				<label class="col-sm-2 control-label"><font color="red">*</font>归属法院：</label>
 				<div class="col-sm-8">
 					<sys:treeselect id="company" name="company" value="${resource.company.id}" labelName="" labelValue="${resource.company.name}"
 									title="部门" url="/sys/office/treeData?type=2" cssClass="form-control required" allowClear="true" notAllowSelectParent="true"/>

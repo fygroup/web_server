@@ -68,7 +68,7 @@
 				<div class="form-group">
 					<label class="col-sm-2 control-label"><font color="red">*</font>编号：</label>
 					<div class="col-sm-8">
-						<p><span class="margin-right">1:网络设备</span> <span>2:服务器</span> <span>3:链路</span> <span>4:数据库</span> <span>5:中间件</span> <span>6:安全设备</span> <span>7:存储设备</span> <span>8:应用</span></p>
+						<p><span class="margin-right">1:网络设备  <b style="color: red">（11:路由器 12：交换机，小类以此类推）</b> </span> <span>2:服务器 </span> <span>3:链路</span> <span>4:数据库</span> <span>5:中间件</span> <span>6:安全设备</span> <span>7:存储设备</span> <span>8:应用</span></p>
 						<form:input path="code" htmlEscape="false"    class="form-control required isIntGtZero"/>
 					</div>
 				</div>

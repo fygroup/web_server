@@ -30,7 +30,7 @@ import com.jeeplus.core.persistence.DataEntity;
 public class User extends DataEntity<User> {
 
 	private static final long serialVersionUID = 1L;
-	private Office company;	// 归属公司
+	private Office company;	// 归属法院
 	private Office office;	// 归属部门
 	private String loginName;// 登录名
 	private String password;// 密码
@@ -107,8 +107,8 @@ public class User extends DataEntity<User> {
 		return id;
 	}
 
-	@NotNull(message="归属公司不能为空")
-	@ExcelField(title="归属公司", align=2, sort=20)
+	@NotNull(message="归属法院不能为空")
+	@ExcelField(title="归属法院", align=2, sort=20)
 	public Office getCompany() {
 		return company;
 	}

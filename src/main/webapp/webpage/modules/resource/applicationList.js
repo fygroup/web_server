@@ -8,7 +8,7 @@ $(document).ready(function() {
             levels: 5,
             onNodeSelected: function(event, treeNode) {
                 var id = treeNode.id == '0' ? '' :treeNode.id;
-                if(treeNode.level == 1){//level=0 代表公司
+                if(treeNode.level == 1){//level=0 代表法院
                     $("#resourceTypeId").val(id);
                 }else{
                     $("#resourceTypeId").val(id);
@@ -161,7 +161,7 @@ $(document).ready(function() {
 		    }
 			,{
 		        field: 'company.name',
-		        title: '归属公司',
+		        title: '归属法院',
 		        sortable: true
 		       
 		    }*/

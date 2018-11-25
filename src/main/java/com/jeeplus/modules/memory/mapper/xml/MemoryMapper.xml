@@ -62,7 +62,7 @@
 		a.resource_id AS "resourceId",
 		a.used_rate AS "usedRate"
 		FROM memory_used_rate a
-		WHERE a.resource_id = #{resourceId}  ORDER BY cast(a.used_rate as decimal(10,3))  DESC
+		WHERE a.resource_id = #{resourceId}  ORDER BY /*cast(a.used_rate as decimal(10,3)) */ a.create_date DESC
 	</select>
 
 
@@ -86,6 +86,7 @@
 	</select>
 
 
+	<!--WHERE  t.parent_id =#{resourceTypeId} AND  (a.create_date BETWEEN #{beginDate} AND #{endDate}) ORDER BY cast(a.used_rate as decimal(10,3))  DESC-->
 	<select id="findUsedRateListOfTimeType" resultType="MemoryUsedRate" >
 		SELECT
 		a.create_date AS "createDate",
@@ -94,7 +95,7 @@
 		FROM memory_used_rate a
 		LEFT JOIN resource r on r.id = a.resource_id
 	    LEFT JOIN resource_type t on t.id =  r.resource_type
-	    WHERE  t.parent_id =#{resourceTypeId} AND  (a.create_date BETWEEN #{beginDate} AND #{endDate}) ORDER BY cast(a.used_rate as decimal(10,3))  DESC
+        WHERE  t.parent_id =#{resourceTypeId}  ORDER BY cast(a.used_rate as decimal(10,3))desc
 	</select>
 
 

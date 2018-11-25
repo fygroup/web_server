@@ -17,4 +17,6 @@ import java.util.List;
 public interface ResourceGatherItemMapper extends BaseMapper<ResourceGatherItem> {
 
    List<ResourceGatherItem> findListByResource(@Param(value = "resourceId") String resourceId);
+
+   void delByResourceId(@Param(value = "resourceId") String resourceId);
 }

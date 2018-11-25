@@ -65,6 +65,15 @@ public class CpuService extends CrudService<CpuMapper, Cpu> {
 		return cpuMapper.findTotalUsedRateListOfTime(resourceId,beginDate,  endDate);
 	}
 
+	public String findCpuUsedRate(String resourceId) {
+		return cpuMapper.findCpuUsedRate(resourceId);
+	}
+
+
+	public String findCpuUsedRateNew(String resourceId) {
+		return cpuMapper.findCpuUsedRateNew(resourceId);
+	}
+
 	public List<CpuUsedRate> findUsedRateListOfTimeType(String resourceTypeId,Date beginDate, Date endDate) {
 		return cpuMapper.findUsedRateListOfTimeType(resourceTypeId,beginDate,  endDate);
 	}

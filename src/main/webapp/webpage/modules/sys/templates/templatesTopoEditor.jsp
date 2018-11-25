@@ -15,7 +15,6 @@
         var name="";
         var title;
 
-
         $.ajax({
             type : 'POST',
             async : true,
@@ -25,12 +24,12 @@
             success : function(result) {
                 var value=result["list"];
                 title=result["title"];
-                console.log(value);
+                //console.log("==================");
+               // console.log(value);
                 for(var i=0;i<value.length;i++){
                     id+=value[i].id+",";
                     name+="("+value[i].resource.name+")"+value[i].indicator.name +",";
                 }
-
                 initNameView();
             },
             error:function(){
@@ -54,7 +53,7 @@
                     initSelect(null);
                 },
                 error:function(){
-                    alert("接口列表失败");
+                    //alert("接口列表失败");
                 },
                 complete:function(XMLHttpRequest,status){
                     if(status=='timeout'){

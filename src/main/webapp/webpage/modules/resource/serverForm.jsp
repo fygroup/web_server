@@ -188,7 +188,7 @@
 
 
 			<div class="form-group">
-				<label class="col-sm-2 control-label"><font color="red">*</font>归属公司：</label>
+				<label class="col-sm-2 control-label"><font color="red">*</font>归属法院：</label>
 				<div class="col-sm-8">
 					<sys:treeselect id="company" name="company" value="${resource.company.id}" labelName="company" labelValue="${resource.company.name}"
 									title="部门" url="/sys/office/treeData?type=2" cssClass="form-control required" allowClear="true" notAllowSelectParent="true"/>
@@ -208,18 +208,18 @@
 				</div>
 			</div>
 
-
-			<div class="form-group">
+			<input   type="hidden"  type="radio" name="managerType" value="1"  checked="checked" onchange="setManagerType(this)">
+			<%--<div class="form-group">
 				<label class="col-sm-2 control-label"><font color="red">*</font>管理方式：</label>
 
 				<div class="col-sm-8">
 					<input type="radio" name="managerType" value="1"  checked="checked" onchange="setManagerType(this)"> SNMPV1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="managerType" value="2" onchange="setManagerType(this)"> SNMPV2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-					<%--<input type="radio" name="managerType" value="3" onchange="setManagerType(this)"> SNMPV3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="managerType" value="4" onchange="setManagerType(this)"> 访问配置
-				--%>
+					&lt;%&ndash;<input type="radio" name="managerType" value="3" onchange="setManagerType(this)"> SNMPV3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="managerType" value="4" onchange="setManagerType(this)"> 访问配置
+				&ndash;%&gt;
 				</div>
 
-			</div>
+			</div>--%>
 
 			<div id="managerTypeDiv">
 				<div class="form-group">

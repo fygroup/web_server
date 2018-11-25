@@ -147,7 +147,7 @@ public class ProcessIndicatorCalculateWindowsByV1V2 {
                         e.printStackTrace();
                     }
                 }
-                // System.out.println(temMapList.toString());
+                 System.out.println(temMapList.toString());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -166,7 +166,7 @@ public class ProcessIndicatorCalculateWindowsByV1V2 {
         if (response.getResponse() == null) {
             return;
         } else {
-            Vector<VariableBinding> recVBs = response.getResponse()
+            Vector<VariableBinding> recVBs = (Vector<VariableBinding>)response.getResponse()
                     .getVariableBindings();
             String oid = recVBs.elementAt(0).getOid().toString();
 
@@ -213,7 +213,7 @@ public class ProcessIndicatorCalculateWindowsByV1V2 {
 
     public static void main(String[] args) throws Exception {
         try {
-            GetProcessesRunInfo("192.168.1.247", "dujin","161", "500", "4",1);
+            GetProcessesRunInfo("192.168.1.245", "le","161", "500", "4",1);
 
             //getHardpan();
             //System.out.println(CpuIndicatorCalculateLinux.getCpuUse().get("cpuLoad").toString().equals("-1"));

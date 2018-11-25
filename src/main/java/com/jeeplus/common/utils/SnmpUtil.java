@@ -120,7 +120,7 @@ public class SnmpUtil {
             if (vb == null) {
                 return "";
             }
-            System.out.println("oid:"+vb.getOid()+"  value:"+vb.getVariable());
+            //System.out.println("oid:"+vb.getOid()+"  value:"+vb.getVariable());
             return vb.getVariable().toString();
         } catch (Exception e) {
             e.printStackTrace();
@@ -280,7 +280,7 @@ public class SnmpUtil {
                         resourceOidValue.setValue(vb.getVariable().toString());
                         list.add(resourceOidValue);
                     }
-                    System.out.println(vb.getOid() + " = " + vb.getVariable());
+                    //System.out.println(vb.getOid() + " = " + vb.getVariable());
                     // Set up the variable binding for the next entry.
                     pdu.setRequestID(new Integer32(0));
                     pdu.set(0, vb);

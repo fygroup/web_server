@@ -65,6 +65,12 @@ public class ResourceIndicatorlistService extends CrudService<ResourceIndicatorl
 	}
 
 
+	@Transactional(readOnly = false)
+	public void delByResourceId(String id) {
+		resourceIndicatorlistMapper.delByResourceId(id);
+	}
+
+
 	public List<ResourceIndicatorlist> findListByResourceId(String resourceId){
 		return resourceIndicatorlistMapper.findListByResourceId(resourceId);
 	}

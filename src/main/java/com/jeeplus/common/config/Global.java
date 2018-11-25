@@ -57,6 +57,11 @@ public class Global {
 	public static final String USERFILES_BASE_URL = "/userfiles/";
 
 	/**
+	 * 二维码路径
+	 */
+	public static final String QRCodeImg_BASE_URL = "/QRCodeImg/";
+
+	/**
 	 * 上传文件基础虚拟路径
 	 */
 	public static final String RESOURCE_IMG_BASE_URL = "resourceimgs/";
